@@ -1,0 +1,69 @@
+{
+  "name": "skyscout-ai",
+  "version": "1.0.0",
+  "description": "A smart, AI-powered flight & trip discovery engine—your eyes on every sky.",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "build": "nx run-many --target=build --all",
+    "dev": "nx run-many --target=dev --all --parallel",
+    "test": "nx run-many --target=test --all",
+    "lint": "nx run-many --target=lint --all",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "nx run-many --target=type-check --all",
+    "clean": "nx reset && rimraf node_modules apps/*/node_modules libs/*/node_modules",
+    "prepare": "husky install",
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@nx/eslint-plugin": "^17.2.8",
+    "@nx/js": "^17.2.8",
+    "@nx/next": "^17.2.8",
+    "@nx/node": "^17.2.8",
+    "@nx/react": "^17.2.8",
+    "@nx/workspace": "^17.2.8",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "nx": "^17.2.8",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "semantic-release": "^22.0.12",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/skyscout-ai.git"
+  },
+  "keywords": [
+    "flight-search",
+    "travel",
+    "ai",
+    "machine-learning",
+    "microservices",
+    "nextjs",
+    "rust",
+    "go",
+    "python",
+    "kubernetes"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
