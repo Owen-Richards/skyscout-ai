@@ -1,0 +1,82 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "@me"
+    assignees:
+      - "@me"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    groups:
+      # Group TypeScript related dependencies
+      typescript-deps:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "ts-*"
+      # Group React/Next.js dependencies
+      react-deps:
+        patterns:
+          - "react"
+          - "react-*"
+          - "next"
+          - "@next/*"
+      # Group testing dependencies
+      testing-deps:
+        patterns:
+          - "jest"
+          - "@jest/*"
+          - "vitest"
+          - "@testing-library/*"
+          - "playwright"
+      # Group linting/formatting dependencies
+      dev-tools:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "prettier"
+          - "@typescript-eslint/*"
+    ignore:
+      # Ignore major version updates for core dependencies
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "@me"
+    assignees:
+      - "@me"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "@me"
+    assignees:
+      - "@me"
+    commit-message:
+      prefix: "docker"
+      include: "scope"

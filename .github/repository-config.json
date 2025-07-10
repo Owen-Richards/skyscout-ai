@@ -1,0 +1,80 @@
+{
+  "private": false,
+  "has_issues": true,
+  "has_projects": true,
+  "has_wiki": true,
+  "has_pages": false,
+  "has_downloads": true,
+  "has_discussions": true,
+  "archived": false,
+  "disabled": false,
+  "visibility": "public",
+  "default_branch": "main",
+  "permissions": {
+    "issues": "write",
+    "checks": "write",
+    "metadata": "read",
+    "contents": "write",
+    "pull_requests": "write",
+    "statuses": "write"
+  },
+  "allow_squash_merge": true,
+  "allow_merge_commit": false,
+  "allow_rebase_merge": true,
+  "allow_auto_merge": true,
+  "delete_branch_on_merge": true,
+  "allow_update_branch": true,
+  "squash_merge_commit_title": "PR_TITLE",
+  "squash_merge_commit_message": "PR_BODY",
+  "merge_commit_title": "PR_TITLE",
+  "merge_commit_message": "PR_BODY",
+  "topics": [
+    "flight-search",
+    "ai-powered",
+    "nextjs",
+    "typescript",
+    "microservices",
+    "travel",
+    "react",
+    "tailwindcss",
+    "nx-monorepo",
+    "trpc"
+  ],
+  "branch_protection_rules": {
+    "main": {
+      "required_status_checks": {
+        "strict": true,
+        "contexts": [
+          "ci/lint-and-type-check",
+          "ci/test",
+          "ci/build"
+        ]
+      },
+      "enforce_admins": false,
+      "required_pull_request_reviews": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews": true,
+        "require_code_owner_reviews": true
+      },
+      "restrictions": null,
+      "allow_force_pushes": false,
+      "allow_deletions": false
+    }
+  },
+  "ai_bot_config": {
+    "enabled": true,
+    "auto_merge_dependabot": true,
+    "auto_create_issues": true,
+    "auto_assign_reviewers": true,
+    "code_review_required": true,
+    "max_pr_size": 500,
+    "preferred_reviewers": ["@me"],
+    "auto_labels": {
+      "dependencies": ["dependencies", "maintenance"],
+      "features": ["enhancement", "feature"],
+      "bugs": ["bug", "fix"],
+      "documentation": ["documentation"],
+      "ai-generated": ["ai-generated", "automated"]
+    }
+  }
+}

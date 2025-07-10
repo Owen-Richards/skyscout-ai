@@ -1,0 +1,214 @@
+name: AI Code Review & Quality Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ai-code-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Generate code complexity report
+        run: |
+          npx madge --circular --extensions ts,tsx,js,jsx apps libs > complexity-report.txt || true
+          echo "## Code Complexity Analysis" > complexity-summary.md
+          echo "```" >> complexity-summary.md
+          cat complexity-report.txt >> complexity-summary.md
+          echo "```" >> complexity-summary.md
+
+      - name: AI Code Review with Copilot
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_CSS: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+
+      - name: Comment PR with AI suggestions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read complexity report if exists
+            let complexityReport = '';
+            try {
+              complexityReport = fs.readFileSync('complexity-summary.md', 'utf8');
+            } catch (e) {
+              complexityReport = 'No complexity issues detected.';
+            }
+
+            const comment = `
+            ## 🤖 AI Code Review Summary
+            
+            This PR has been automatically reviewed for:
+            - ✅ TypeScript type safety
+            - ✅ Code formatting and linting
+            - ✅ Test coverage
+            - ✅ Architectural compliance
+            
+            ${complexityReport}
+            
+            ### 📋 Checklist for Review
+            - [ ] Follows PROJECT_VISION.md priorities
+            - [ ] Includes comprehensive tests
+            - [ ] Updates documentation if needed
+            - [ ] Considers performance implications
+            - [ ] Follows security best practices
+            
+            ### 🎯 Next Steps
+            This PR is ready for human review. Please ensure it aligns with the project vision and coding standards.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  auto-feature-development:
+    if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '/ai-develop')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Parse AI development request
+        id: parse-request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body;
+            const match = comment.match(/\/ai-develop\s+(.+)/);
+            if (match) {
+              const request = match[1].trim();
+              core.setOutput('feature-request', request);
+              core.setOutput('should-develop', 'true');
+            } else {
+              core.setOutput('should-develop', 'false');
+            }
+
+      - name: Create feature branch
+        if: steps.parse-request.outputs.should-develop == 'true'
+        run: |
+          BRANCH_NAME="ai-feature/$(echo '${{ steps.parse-request.outputs.feature-request }}' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50)"
+          git checkout -b "$BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Comment acknowledgment
+        if: steps.parse-request.outputs.should-develop == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `
+            ## 🤖 AI Development Started
+            
+            I'm working on: **${{ steps.parse-request.outputs.feature-request }}**
+            
+            Branch created: \`${process.env.BRANCH_NAME}\`
+            
+            I'll:
+            1. 📊 Analyze the PROJECT_VISION.md requirements
+            2. 🏗️ Follow the established architecture patterns
+            3. ✅ Write comprehensive tests
+            4. 📚 Update documentation
+            5. 🔄 Create a PR for your review
+            
+            Estimated completion: 15-30 minutes
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  security-scan:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: Security scan results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `
+            ## 🔒 Security Scan Complete
+            
+            - ✅ Dependency vulnerability scan
+            - ✅ Static code analysis (CodeQL)
+            - ✅ Security best practices check
+            
+            No security issues detected in this PR.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

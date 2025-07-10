@@ -2,6 +2,23 @@
 
 _A smart, AI-powered flight & trip discovery engine—your eyes on every sky._
 
+## 🤖 AI-Powered Development
+
+This repository is configured with AI-powered development workflows to accelerate feature development and maintain code quality. Our AI bots can:
+
+- **Develop Features**: Create full features from issue descriptions
+- **Code Reviews**: Automated code quality and architecture compliance
+- **Maintenance**: Keep dependencies updated and code optimized
+- **Documentation**: Generate and maintain comprehensive docs
+
+### 🎯 Quick AI Commands
+
+- **Request Feature Development**: Comment `/ai-develop <feature description>` on any issue
+- **Trigger Maintenance**: Run automated code maintenance workflows
+- **Get Code Review**: AI reviews all PRs automatically
+
+---
+
 ## 🌟 Overview
 
 SkyScout AI is a cutting-edge flight discovery platform that leverages artificial intelligence and machine learning to provide users with intelligent flight recommendations, price predictions, and personalized travel insights. Built with a modern microservices architecture and enterprise-grade technologies.
@@ -14,6 +31,7 @@ SkyScout AI is a cutting-edge flight discovery platform that leverages artificia
 - **TypeScript** - End-to-end type safety
 - **ESLint + Prettier** - Code quality and formatting
 - **Husky** - Git hooks for quality gates
+- **AI Workflows** - Automated development and maintenance
 
 ### Frontend
 

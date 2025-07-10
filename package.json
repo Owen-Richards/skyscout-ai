@@ -18,7 +18,14 @@
     "type-check": "nx run-many --target=type-check --all",
     "clean": "nx reset && rimraf node_modules apps/*/node_modules libs/*/node_modules",
     "prepare": "husky install",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "ai:maintenance": "node scripts/ai-maintenance.js",
+    "ai:task-check": "node scripts/check-ai-tasks.js",
+    "ai:generate-docs": "node scripts/generate-docs.js",
+    "complexity": "madge --circular --extensions ts,tsx,js,jsx apps libs",
+    "security:audit": "npm audit --audit-level=moderate",
+    "deps:check": "npx npm-check-updates",
+    "deps:update": "npx npm-check-updates -u && npm install"
   },
   "devDependencies": {
     "@nx/eslint-plugin": "^17.2.8",
