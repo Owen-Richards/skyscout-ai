@@ -10,6 +10,18 @@ build/
 out/
 .next/
 
+# TypeScript builds - prevent JS files in libs src (should only contain TS source)
+libs/*/src/**/*.js
+libs/*/src/**/*.js.map
+
+# Prevent duplicate JS files in apps (except config files)
+apps/*/app/**/*.js
+apps/*/lib/**/*.js
+apps/*/components/**/*.js
+!apps/*/*.config.js
+!apps/*/tailwind.config.js
+!apps/*/next.config.js
+
 # Environment variables
 .env
 .env.local

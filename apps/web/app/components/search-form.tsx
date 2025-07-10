@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { Search, MapPin, Calendar, Users } from 'lucide-react'
+import { Calendar, MapPin, Search, Users } from 'lucide-react';
+import { useState } from 'react';
 
 export function SearchForm() {
-  const [origin, setOrigin] = useState('')
-  const [destination, setDestination] = useState('')
-  const [departDate, setDepartDate] = useState('')
-  const [returnDate, setReturnDate] = useState('')
-  const [passengers, setPassengers] = useState(1)
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
+  const [departDate, setDepartDate] = useState('');
+  const [returnDate, setReturnDate] = useState('');
+  const [passengers, setPassengers] = useState(1);
 
   const handleSearch = () => {
     // TODO: Implement search functionality
@@ -18,15 +18,15 @@ export function SearchForm() {
       departDate,
       returnDate,
       passengers,
-    })
-  }
+    });
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8 -mt-16 relative z-10 max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         Find Your Perfect Flight
       </h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -38,7 +38,7 @@ export function SearchForm() {
               type="text"
               placeholder="Origin city"
               value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
+              onChange={e => setOrigin(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -54,7 +54,7 @@ export function SearchForm() {
               type="text"
               placeholder="Destination city"
               value={destination}
-              onChange={(e) => setDestination(e.target.value)}
+              onChange={e => setDestination(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -69,7 +69,7 @@ export function SearchForm() {
             <input
               type="date"
               value={departDate}
-              onChange={(e) => setDepartDate(e.target.value)}
+              onChange={e => setDepartDate(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -84,7 +84,7 @@ export function SearchForm() {
             <input
               type="date"
               value={returnDate}
-              onChange={(e) => setReturnDate(e.target.value)}
+              onChange={e => setReturnDate(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -98,10 +98,10 @@ export function SearchForm() {
             <Users className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
             <select
               value={passengers}
-              onChange={(e) => setPassengers(parseInt(e.target.value))}
+              onChange={e => setPassengers(parseInt(e.target.value))}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
             >
-              {[1, 2, 3, 4, 5, 6].map((num) => (
+              {[1, 2, 3, 4, 5, 6].map(num => (
                 <option key={num} value={num}>
                   {num} {num === 1 ? 'Passenger' : 'Passengers'}
                 </option>
@@ -119,5 +119,5 @@ export function SearchForm() {
         Search Flights
       </button>
     </div>
-  )
+  );
 }

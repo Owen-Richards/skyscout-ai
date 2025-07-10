@@ -12,23 +12,40 @@ export const APP_CONFIG = {
     priceAlerts: true,
     multiLanguage: true,
   },
-} as const
+} as const;
 
 export const SUPPORTED_CURRENCIES = [
-  'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD'
-] as const
+  'USD',
+  'EUR',
+  'GBP',
+  'JPY',
+  'CAD',
+  'AUD',
+  'CHF',
+  'CNY',
+  'SEK',
+  'NZD',
+] as const;
 
 export const SUPPORTED_LANGUAGES = [
-  'en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh'
-] as const
+  'en',
+  'es',
+  'fr',
+  'de',
+  'it',
+  'pt',
+  'ja',
+  'ko',
+  'zh',
+] as const;
 
 export const FLIGHT_CLASSES = [
   'economy',
-  'premium_economy', 
+  'premium_economy',
   'business',
-  'first'
-] as const
+  'first',
+] as const;
 
-export const MAX_SEARCH_RESULTS = 100
-export const DEFAULT_SEARCH_RADIUS = 50 // km
-export const CACHE_TTL = 300 // 5 minutes
+export const MAX_SEARCH_RESULTS = 100;
+export const DEFAULT_SEARCH_RADIUS = 50; // km
+export const CACHE_TTL = 300; // 5 minutes

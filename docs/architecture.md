@@ -11,14 +11,14 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 │   Web Frontend  │    │  Mobile Apps    │    │  External APIs  │
 │   (Next.js 14)  │    │   (Future)      │    │ (Flight APIs)   │
 └─────────┬───────┘    └─────────────────┘    └─────────────────┘
-          │                                                      
-          │                                                      
+          │
+          │
 ┌─────────▼──────────────────────────────────────────────────────┐
 │                    API Gateway / Load Balancer                 │
-│                       (AWS ALB + tRPC)                        │
+│                       (AWS ALB + tRPC)                         │
 └─────────┬──────────────────────────────────────────────────────┘
-          │                                                      
-          │                                                      
+          │
+          │
 ┌─────────▼──────────────────────────────────────────────────────┐
 │                    Core Microservices                          │
 ├─────────────────┬─────────────────┬─────────────────┬──────────┤
@@ -29,8 +29,8 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 │ • User Mgmt     │ • Sub-100ms     │ • Notifications │  Predict │
 │ • Sessions      │ • Caching       │ • Scheduling    │• ML Ops  │
 └─────────────────┴─────────────────┴─────────────────┴──────────┘
-          │                                                      
-          │                                                      
+          │
+          │
 ┌─────────▼──────────────────────────────────────────────────────┐
 │                       Data Layer                               │
 ├─────────────────┬─────────────────┬─────────────────┬──────────┤
@@ -46,6 +46,7 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ## Technology Stack Deep Dive
 
 ### Frontend Layer
+
 - **Next.js 14**: App Router with React Server Components
 - **React 18**: Concurrent features and Suspense
 - **Tailwind CSS**: Utility-first styling
@@ -57,12 +58,14 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ### Backend Services
 
 #### Auth Service (NestJS)
+
 - OAuth2 flow with Auth0 integration
 - JWT token management and refresh
 - User profile and preference management
 - Session handling with Redis
 
 #### Search Engine (Rust + Go)
+
 - **Primary (Rust)**: Ultra-fast API calls (<100ms)
   - Actix-web framework
   - Connection pooling
@@ -72,12 +75,14 @@ SkyScout AI follows a modern microservices architecture designed for scalability
   - Goroutines for concurrency
 
 #### Alert Service (NestJS)
+
 - Price monitoring and alerts
 - BullMQ for job scheduling
 - Kafka for event streaming
 - Email/SMS notifications
 
 #### ML Service (Python)
+
 - FastAPI for high-performance APIs
 - PyTorch/TensorFlow for models
 - Price prediction algorithms
@@ -86,23 +91,27 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ### Data Strategy
 
 #### PostgreSQL + TimescaleDB
+
 - Primary transactional data
 - Time-series price history
 - ACID compliance for critical operations
 
 #### Redis Enterprise
+
 - Session storage
 - API response caching
 - Rate limiting data
 - Real-time pub/sub
 
 #### DynamoDB
+
 - Global user preferences
 - Alert configurations
 - Multi-region replication
 - Eventual consistency model
 
 #### OpenSearch
+
 - Full-text search across destinations
 - Geospatial queries for location-based search
 - Analytics and aggregations
@@ -111,12 +120,14 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ### Infrastructure
 
 #### Container Orchestration
+
 - **Kubernetes (EKS)**: Production workloads
 - **Docker**: Development and CI/CD
 - **Helm**: Configuration management
 - **ArgoCD**: GitOps deployment
 
 #### Monitoring & Observability
+
 - **OpenTelemetry**: Distributed tracing
 - **Prometheus**: Metrics collection
 - **Grafana**: Dashboards and visualization
@@ -124,6 +135,7 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 - **Datadog**: APM and error tracking
 
 #### CI/CD Pipeline
+
 - **GitHub Actions**: Automated testing and deployment
 - **Terraform CDK**: Infrastructure as Code
 - **Semantic Release**: Automated versioning
@@ -132,18 +144,21 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ## Scalability Considerations
 
 ### Horizontal Scaling
+
 - Stateless microservices design
 - Load balancing at multiple layers
 - Auto-scaling based on metrics
 - Database read replicas
 
 ### Performance Optimization
+
 - CDN for static assets (CloudFront)
 - Edge deployment (Vercel Edge)
 - Connection pooling
 - Response compression
 
 ### Reliability Patterns
+
 - Circuit breakers for external APIs
 - Retry logic with exponential backoff
 - Health checks and graceful degradation
@@ -152,18 +167,21 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ## Security Architecture
 
 ### Authentication & Authorization
+
 - OAuth2 with PKCE flow
 - JWT with short expiration
 - Role-based access control (RBAC)
 - API key management
 
 ### Data Protection
+
 - Encryption at rest and in transit
 - PII data anonymization
 - GDPR compliance features
 - Audit logging
 
 ### Network Security
+
 - VPC with private subnets
 - WAF for web application protection
 - DDoS protection
@@ -172,12 +190,14 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 ## Development Workflow
 
 ### Monorepo Structure
+
 - Nx for build optimization
 - Shared libraries for code reuse
 - Type-safe APIs across services
 - Consistent tooling and linting
 
 ### Testing Strategy
+
 - Unit tests for business logic
 - Integration tests for APIs
 - E2E tests for critical flows
@@ -185,6 +205,7 @@ SkyScout AI follows a modern microservices architecture designed for scalability
 - Security testing
 
 ### Documentation
+
 - API documentation with OpenAPI
 - Architecture decision records (ADRs)
 - Code documentation with JSDoc

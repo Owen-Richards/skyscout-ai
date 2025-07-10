@@ -1,7 +1,6 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { Plane, Sparkles, Globe } from 'lucide-react'
+import { Globe, Plane, Sparkles } from 'lucide-react';
 
 export function HeroSection() {
   return (
@@ -13,16 +12,16 @@ export function HeroSection() {
             <Plane className="w-16 h-16" />
           </div>
         </div>
-        
+
         <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
           SkyScout AI
         </h1>
-        
+
         <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-          Your intelligent flight discovery engine powered by AI—find the best deals, 
-          predict prices, and explore destinations like never before.
+          Your intelligent flight discovery engine powered by AI—find the best
+          deals, predict prices, and explore destinations like never before.
         </p>
-        
+
         <div className="flex flex-wrap justify-center gap-8 mt-12">
           <div className="flex items-center gap-3 text-blue-100">
             <Sparkles className="w-6 h-6" />
@@ -39,5 +38,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

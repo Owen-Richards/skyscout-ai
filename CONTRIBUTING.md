@@ -5,6 +5,7 @@ We welcome contributions to SkyScout AI! This document provides guidelines for c
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker & Docker Compose
 - Rust (for search engine)
@@ -43,6 +44,7 @@ skyscout-ai/
 ## Coding Standards
 
 ### TypeScript/JavaScript
+
 - Use TypeScript for all new code
 - Follow ESLint and Prettier configurations
 - Write comprehensive tests
@@ -50,12 +52,14 @@ skyscout-ai/
 - Add JSDoc comments for public APIs
 
 ### React/Next.js
+
 - Use App Router with server components by default
 - Implement client components only when needed
 - Use Tailwind CSS for styling
 - Follow accessibility best practices
 
 ### Backend Services
+
 - Use dependency injection
 - Implement proper error handling
 - Follow RESTful API design
@@ -94,18 +98,21 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 ## Architecture Guidelines
 
 ### Microservices
+
 - Each service has a single responsibility
 - Use event-driven architecture
 - Implement circuit breakers
 - Follow 12-factor app principles
 
 ### Security
+
 - Never commit secrets
 - Use environment variables
 - Validate all inputs
 - Follow security best practices
 
 ### Performance
+
 - Optimize for Core Web Vitals
 - Implement proper caching
 - Use lazy loading
@@ -114,6 +121,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 ## Questions?
 
 If you have questions, please:
+
 1. Check existing issues
 2. Create a new issue for bugs
 3. Start a discussion for questions

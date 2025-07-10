@@ -1,7 +1,7 @@
-import { HeroSection } from './components/hero-section'
-import { SearchForm } from './components/search-form'
-import { FeaturedDeals } from './components/featured-deals'
-import { MapView } from './components/map-view'
+import { FeaturedDeals } from './components/featured-deals';
+import { HeroSection } from './components/hero-section';
+import { MapView } from './components/map-view';
+import { SearchForm } from './components/search-form';
 
 export default function HomePage() {
   return (
@@ -15,5 +15,5 @@ export default function HomePage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

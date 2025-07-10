@@ -1,6 +1,6 @@
 # SkyScout AI 🚀
 
-*A smart, AI-powered flight & trip discovery engine—your eyes on every sky.*
+_A smart, AI-powered flight & trip discovery engine—your eyes on every sky._
 
 ## 🌟 Overview
 
@@ -9,12 +9,14 @@ SkyScout AI is a cutting-edge flight discovery platform that leverages artificia
 ## 🔧 Tech Stack
 
 ### Monorepo & Developer Experience
+
 - **Nx** - Monorepo orchestration with build optimization
 - **TypeScript** - End-to-end type safety
 - **ESLint + Prettier** - Code quality and formatting
 - **Husky** - Git hooks for quality gates
 
 ### Frontend
+
 - **Next.js 14** - App router with server components
 - **React 18** - Modern React with concurrent features
 - **Tailwind CSS** - Utility-first styling
@@ -25,12 +27,14 @@ SkyScout AI is a cutting-edge flight discovery platform that leverages artificia
 - **Mapbox GL JS** - Interactive maps and heatmaps
 
 ### Backend Microservices
+
 - **Auth Service** - NestJS + Passport.js + Auth0
 - **Search Engine** - Rust (Actix-web) + Go (gRPC)
 - **Alert Service** - Node.js (NestJS + BullMQ)
 - **ML Service** - Python (FastAPI + PyTorch/TensorFlow)
 
 ### Data & Storage
+
 - **PostgreSQL + TimescaleDB** - Time-series data
 - **DynamoDB** - Global metadata storage
 - **Redis Enterprise** - Caching and queues
@@ -38,6 +42,7 @@ SkyScout AI is a cutting-edge flight discovery platform that leverages artificia
 - **S3 + Lake Formation** - Data lake
 
 ### Infrastructure
+
 - **Terraform CDK** - Infrastructure as Code
 - **Kubernetes (EKS)** - Container orchestration
 - **Docker** - Containerization
@@ -45,6 +50,7 @@ SkyScout AI is a cutting-edge flight discovery platform that leverages artificia
 - **ArgoCD** - GitOps deployment
 
 ### Observability
+
 - **OpenTelemetry** - Distributed tracing
 - **Prometheus + Grafana** - Metrics and monitoring
 - **Datadog/Sentry** - Error tracking and APM
@@ -78,6 +84,7 @@ skyscout-ai/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker & Docker Compose
 - Rust (for search engine)
@@ -87,27 +94,31 @@ skyscout-ai/
 ### Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/skyscout-ai.git
    cd skyscout-ai
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start development environment**
+
    ```bash
    # Start all services
    npm run dev
-   
+
    # Or start specific services
    nx dev web                    # Frontend only
    nx dev auth-service          # Auth service only
    ```
 
 4. **Run tests**
+
    ```bash
    npm test
    ```

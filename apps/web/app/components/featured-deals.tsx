@@ -1,6 +1,4 @@
-'use client'
-
-import React from 'react'
+'use client';
 
 export function FeaturedDeals() {
   const deals = [
@@ -40,16 +38,16 @@ export function FeaturedDeals() {
       aiPrediction: 'Price may drop 8% in next 3 days',
       confidence: 78,
     },
-  ]
+  ];
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <h3 className="text-2xl font-bold text-gray-900 mb-6">
         🔥 AI-Curated Deals
       </h3>
-      
+
       <div className="space-y-4">
-        {deals.map((deal) => (
+        {deals.map(deal => (
           <div
             key={deal.id}
             className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -77,7 +75,7 @@ export function FeaturedDeals() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-blue-50 rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-blue-600 font-medium text-sm">
@@ -89,7 +87,7 @@ export function FeaturedDeals() {
               </div>
               <p className="text-blue-700 text-sm">{deal.aiPrediction}</p>
             </div>
-            
+
             <button className="w-full mt-3 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
               View Details
             </button>
@@ -97,5 +95,5 @@ export function FeaturedDeals() {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { router, publicProcedure } from './trpc'
-import { FlightSearchSchema } from '@skyscout/shared'
-import { z } from 'zod'
+import { FlightSearchSchema } from '@skyscout/shared';
+import { z } from 'zod';
+import { publicProcedure, router } from './trpc';
 
 export const appRouter = router({
   health: publicProcedure.query(() => {
-    return { status: 'ok', timestamp: new Date().toISOString() }
+    return { status: 'ok', timestamp: new Date().toISOString() };
   }),
 
   flights: router({
@@ -31,7 +31,7 @@ export const appRouter = router({
           ],
           total: 1,
           page: 1,
-        }
+        };
       }),
 
     getDeals: publicProcedure.query(async () => {
@@ -51,17 +51,19 @@ export const appRouter = router({
           confidence: 85,
           prediction: 'Price likely to increase 15% in next 7 days',
         },
-      ]
+      ];
     }),
   }),
 
   predictions: router({
     getPrice: publicProcedure
-      .input(z.object({
-        origin: z.string(),
-        destination: z.string(),
-        departureDate: z.string(),
-      }))
+      .input(
+        z.object({
+          origin: z.string(),
+          destination: z.string(),
+          departureDate: z.string(),
+        })
+      )
       .query(async ({ input }) => {
         // TODO: Implement ML price prediction
         return {
@@ -70,9 +72,9 @@ export const appRouter = router({
           confidence: 85,
           trend: 'increasing' as const,
           recommendation: 'Book now to save an estimated $36',
-        }
+        };
       }),
   }),
-})
+});
 
-export type AppRouter = typeof appRouter
+export type AppRouter = typeof appRouter;
