@@ -1,8 +1,8 @@
+import { ButtonDemo } from './components/button-demo';
 import { FeaturedDeals } from './components/featured-deals';
 import { HeroSection } from './components/hero-section';
 import { MapView } from './components/map-view';
 import { SearchForm } from './components/search-form';
-import { ButtonDemo } from './components/button-demo';
 
 export default function HomePage() {
   return (
