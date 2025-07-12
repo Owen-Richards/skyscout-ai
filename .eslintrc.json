@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
+  "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/.nx/**"],
   "plugins": ["@nx"],
   "overrides": [
     {
@@ -23,12 +23,31 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["@nx/typescript"],
-      "rules": {}
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": ["tsconfig.base.json"]
+      },
+      "plugins": ["@typescript-eslint"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "argsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["@nx/javascript"],
+      "extends": ["eslint:recommended", "prettier"],
+      "env": {
+        "node": true,
+        "es6": true
+      },
       "rules": {}
     }
   ]

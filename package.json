@@ -15,6 +15,7 @@
     "lint": "nx run-many --target=lint --all",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "lint-staged": "lint-staged",
     "type-check": "nx run-many --target=type-check --all",
     "clean": "nx reset && rimraf node_modules apps/*/node_modules libs/*/node_modules",
     "prepare": "husky install",
@@ -34,6 +35,7 @@
     "@nx/node": "^17.2.8",
     "@nx/react": "^17.2.8",
     "@nx/workspace": "^17.2.8",
+    "@types/jest-axe": "^3.5.9",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8.56.0",
@@ -44,6 +46,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
+    "jsonc-eslint-parser": "^2.4.0",
     "lint-staged": "^15.2.0",
     "nx": "^17.2.8",
     "prettier": "^3.1.1",
@@ -72,5 +75,14 @@
     "kubernetes"
   ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
 }
