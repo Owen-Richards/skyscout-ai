@@ -23,6 +23,11 @@
     "ai:maintenance": "node scripts/ai-maintenance.js",
     "ai:task-check": "node scripts/check-ai-tasks.js",
     "ai:generate-docs": "node scripts/generate-docs.js",
+    "ai:autonomous:start": "node scripts/autonomous-dev.js start",
+    "ai:autonomous:status": "node scripts/autonomous-dev.js status",
+    "ai:autonomous:config": "node scripts/autonomous-dev.js config",
+    "storybook": "cd libs/ui && npm run storybook",
+    "build-storybook": "cd libs/ui && npm run build-storybook",
     "complexity": "madge --circular --extensions ts,tsx,js,jsx apps libs",
     "security:audit": "npm audit --audit-level=moderate",
     "deps:check": "npx npm-check-updates",
@@ -74,7 +79,7 @@
     "python",
     "kubernetes"
   ],
-  "author": "Your Name",
+  "author": "Owen Richards",
   "license": "MIT",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -1,0 +1,21 @@
+{
+  "explanation": "SkyScout AI is a flight discovery platform built with Next.js 14, TypeScript, and microservices architecture. Key components include flight search, AI recommendations, price tracking, and interactive maps.",
+  "conventions": {
+    "components": "Use TypeScript with proper types, Tailwind CSS for styling, and Radix UI for accessibility",
+    "api": "Use tRPC for type-safe APIs, Zod for validation, and proper error handling",
+    "testing": "Jest with React Testing Library and accessibility testing with jest-axe",
+    "styling": "Tailwind CSS with design tokens, responsive design, and dark mode support"
+  },
+  "architecture": {
+    "frontend": "Next.js 14 App Router with TypeScript",
+    "backend": "Multiple microservices (NestJS, Rust, Go, Python)",
+    "database": "PostgreSQL with TimescaleDB, Redis for caching",
+    "infrastructure": "Kubernetes on AWS, Docker containers"
+  },
+  "patterns": {
+    "components": "Compound components with variants using class-variance-authority",
+    "state": "React state with proper TypeScript types",
+    "forms": "React Hook Form with Zod validation",
+    "api": "tRPC procedures with proper error handling"
+  }
+}
