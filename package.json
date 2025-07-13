@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "build": "nx run-many --target=build --all",
-    "dev": "nx run-many --target=dev --all --parallel",
+    "dev": "nx run-many --target=dev --projects=@skyscout/shared,@skyscout/trpc,@skyscout/ui,@skyscout/web --parallel",
+    "dev:libs": "nx run-many --target=dev --projects=@skyscout/shared,@skyscout/trpc,@skyscout/ui --parallel",
+    "dev:web": "nx run @skyscout/web:dev",
     "test": "nx run-many --target=test --all",
     "lint": "nx run-many --target=lint --all",
     "format": "prettier --write .",
