@@ -1,0 +1,51 @@
+{
+  "autonomous_development": {
+    "enabled": true,
+    "mode": "production_ready",
+    "auto_assign_tasks": true,
+    "auto_create_prs": true,
+    "require_human_review": true,
+    "max_concurrent_tasks": 2,
+    "task_queue_file": ".github/AI_TASK_QUEUE.md",
+    "project_vision_file": ".github/PROJECT_VISION.md"
+  },
+  "development_standards": {
+    "typescript_strict": true,
+    "test_coverage_min": 90,
+    "accessibility_compliance": "WCAG_2.1_AA",
+    "code_style": "prettier_eslint",
+    "documentation_required": true,
+    "storybook_stories": true
+  },
+  "ai_capabilities": {
+    "component_development": true,
+    "api_development": true,
+    "testing": true,
+    "documentation": true,
+    "performance_optimization": true,
+    "accessibility_audit": true
+  },
+  "workflow_automation": {
+    "auto_install_dependencies": true,
+    "auto_run_tests": true,
+    "auto_build_check": true,
+    "auto_lint_fix": true,
+    "auto_format_code": true,
+    "auto_generate_docs": true
+  },
+  "quality_gates": {
+    "build_must_pass": true,
+    "tests_must_pass": true,
+    "lint_must_pass": true,
+    "type_check_must_pass": true,
+    "accessibility_score_min": 95,
+    "performance_budget_max": "500kb"
+  },
+  "notification_settings": {
+    "task_started": true,
+    "task_completed": true,
+    "task_failed": true,
+    "pr_created": true,
+    "review_required": true
+  }
+}

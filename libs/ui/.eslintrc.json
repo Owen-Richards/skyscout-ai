@@ -1,0 +1,24 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": [
+    "!**/*",
+    "dist",
+    "node_modules",
+    "coverage",
+    "storybook-static"
+  ],
+  "overrides": [
+    {
+      "files": [".storybook/**/*.ts", ".storybook/**/*.tsx"],
+      "parserOptions": {
+        "project": false
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
+}

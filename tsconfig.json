@@ -3,5 +3,6 @@
   "compilerOptions": {
     "sourceMap": false
   },
+  "include": ["apps/**/*", "libs/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "tmp"]
 }
