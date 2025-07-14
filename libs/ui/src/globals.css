@@ -5,25 +5,25 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 3.9%;
 
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 210 40% 94%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -112,9 +112,22 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Smooth theme transitions */
+  /* Enhanced theme transitions */
   * {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* Improved contrast for light mode */
+  .light {
+    --foreground: 240 10% 3.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+  }
+
+  /* Enhanced dark mode */
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --muted-foreground: 240 5% 64.9%;
   }
 
   /* Custom scrollbar styles */
@@ -135,13 +148,34 @@
     @apply bg-muted-foreground/50;
   }
 
-  /* Focus indicators */
+  /* Enhanced focus indicators */
   .focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
-  /* Selection colors */
+  /* Better selection colors */
   ::selection {
     @apply bg-primary/20 text-primary-foreground;
+  }
+
+  /* Improved button hover effects */
+  .button-hover-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .button-hover-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .button-hover-glow:hover::before {
+    left: 100%;
   }
 }

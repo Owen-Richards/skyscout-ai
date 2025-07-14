@@ -26,8 +26,8 @@ export function HeroFeatureCard({
         p-6 rounded-xl backdrop-blur-sm border transition-all duration-500
         ${
           isActive
-            ? 'bg-white/20 border-white/30 scale-105'
-            : 'bg-white/10 border-white/20 hover:bg-white/15'
+            ? 'bg-card/20 border-primary/30 scale-105'
+            : 'bg-card/10 border-border/20 hover:bg-card/15'
         }
         ${className}
       `}
@@ -36,12 +36,12 @@ export function HeroFeatureCard({
       }}
     >
       <div className="flex items-center gap-3 mb-3">
-        <div className="p-2 rounded-lg bg-white/20">
-          <Icon className="h-5 w-5 text-white" />
+        <div className="p-2 rounded-lg bg-primary/20">
+          <Icon className="h-5 w-5 text-primary" />
         </div>
-        <h3 className="font-semibold text-white">{feature.title}</h3>
+        <h3 className="font-semibold text-foreground">{feature.title}</h3>
       </div>
-      <p className="text-white/80 text-sm">{feature.description}</p>
+      <p className="text-muted-foreground text-sm">{feature.description}</p>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
@@ -10,64 +12,64 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Simple test variants to verify Tailwind is working
+        // Primary variant using theme variables
         default:
-          'bg-blue-600 text-white font-medium shadow-lg hover:bg-blue-700 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200',
+          'bg-primary text-primary-foreground font-medium shadow-lg hover:bg-primary/90 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200',
 
-        // Premium gradient variant
+        // Premium gradient variant with theme awareness
         premium:
-          'bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200',
+          'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 dark:from-primary/90 dark:to-primary/70',
 
-        // Test glass effect
+        // Glass effect using theme variables
         glass:
-          'bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 text-gray-800 font-medium shadow-lg hover:bg-opacity-30 hover:shadow-xl transition-all duration-200',
+          'bg-background/20 backdrop-blur-md border border-border/30 text-foreground font-medium shadow-lg hover:bg-background/30 hover:shadow-xl transition-all duration-200',
 
-        // Soft neumorphism variant
-        soft: 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800 font-medium shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(0,0,0,0.15),0_4px_8px_rgba(0,0,0,0.15)] hover:scale-[1.01] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] active:scale-[0.99] dark:from-gray-700 dark:to-gray-800 dark:text-gray-100',
+        // Soft neumorphism variant with theme awareness
+        soft: 'bg-gradient-to-br from-secondary/50 to-secondary/70 text-secondary-foreground font-medium shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),inset_0_-2px_4px_rgba(0,0,0,0.05),0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_1px_2px_rgba(255,255,255,0.2),inset_0_-1px_2px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.15)] hover:scale-[1.01] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] active:scale-[0.99]',
 
         destructive:
-          'bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white font-medium shadow-[0_2px_8px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_16px_rgba(239,68,68,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-red-400 hover:via-red-500 hover:to-red-600',
+          'bg-destructive text-destructive-foreground font-medium shadow-lg hover:bg-destructive/90 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200',
 
         outline:
-          'border-2 border-input bg-background/50 backdrop-blur-sm text-foreground font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-accent/80 hover:text-accent-foreground hover:border-accent hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] dark:border-border/50 dark:hover:border-accent/50',
+          'border-2 border-input bg-background/50 backdrop-blur-sm text-foreground font-medium shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-accent hover:shadow-md hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200',
 
         secondary:
-          'bg-gradient-to-br from-secondary via-secondary/95 to-secondary/90 text-secondary-foreground font-medium shadow-[0_1px_3px_rgba(0,0,0,0.12)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.16)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] hover:from-secondary/95 hover:to-secondary/85',
+          'bg-secondary text-secondary-foreground font-medium shadow-sm hover:bg-secondary/80 hover:shadow-md hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200',
 
         ghost:
-          'text-foreground font-medium hover:bg-accent/80 hover:text-accent-foreground hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] backdrop-blur-sm',
+          'text-foreground font-medium hover:bg-accent hover:text-accent-foreground hover:shadow-sm hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] backdrop-blur-sm transition-all duration-200',
 
-        link: 'text-primary font-medium underline-offset-4 hover:underline hover:text-primary/80 hover:scale-[1.02] active:scale-[0.98] tracking-normal',
+        link: 'text-primary font-medium underline-offset-4 hover:underline hover:text-primary/80 hover:scale-[1.02] active:scale-[0.98] tracking-normal transition-all duration-200',
 
         success:
-          'bg-gradient-to-br from-emerald-500 via-green-600 to-green-700 text-white font-medium shadow-[0_2px_8px_rgba(34,197,94,0.3)] hover:shadow-[0_4px_16px_rgba(34,197,94,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-emerald-400 hover:via-green-500 hover:to-green-600',
+          'bg-green-600 text-white font-medium shadow-lg hover:bg-green-700 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 dark:bg-green-700 dark:hover:bg-green-600',
 
         warning:
-          'bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 text-white font-medium shadow-[0_2px_8px_rgba(245,158,11,0.3)] hover:shadow-[0_4px_16px_rgba(245,158,11,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-amber-300 hover:via-orange-400 hover:to-amber-500',
+          'bg-amber-500 text-white font-medium shadow-lg hover:bg-amber-600 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 dark:bg-amber-600 dark:hover:bg-amber-500',
 
-        // Aviation-themed variants with proper Tailwind colors
+        // Aviation-themed variants with proper theme variables
         'sky-primary':
-          'bg-gradient-to-br from-sky-400 via-blue-500 to-cyan-600 text-white font-medium shadow-[0_2px_12px_rgba(56,189,248,0.3)] hover:shadow-[0_4px_20px_rgba(56,189,248,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-sky-300 hover:via-blue-400 hover:to-cyan-500 before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300',
+          'bg-gradient-to-br from-sky-400 via-blue-500 to-cyan-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-sky-300 hover:via-blue-400 hover:to-cyan-500 before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 dark:from-sky-500 dark:via-blue-600 dark:to-cyan-700',
 
         'flight-action':
-          'bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white font-semibold shadow-[0_3px_14px_rgba(79,70,229,0.3)] hover:shadow-[0_6px_24px_rgba(79,70,229,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-blue-500 hover:via-indigo-600 hover:to-purple-700 relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700',
+          'bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-blue-500 hover:via-indigo-600 hover:to-purple-700 relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700 dark:from-blue-700 dark:via-indigo-800 dark:to-purple-900',
 
         altitude:
-          'bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 text-white font-medium shadow-[0_2px_12px_rgba(71,85,105,0.3)] hover:shadow-[0_4px_20px_rgba(71,85,105,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-slate-500 hover:via-blue-600 hover:to-indigo-700',
+          'bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-slate-500 hover:via-blue-600 hover:to-indigo-700 dark:from-slate-700 dark:via-blue-800 dark:to-indigo-900',
 
-        // Sunset/Dawn themed variants
-        dawn: 'bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 text-white font-medium shadow-[0_3px_14px_rgba(251,146,60,0.3)] hover:shadow-[0_6px_24px_rgba(251,146,60,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-orange-300 hover:via-pink-400 hover:to-purple-500',
+        // Sunset/Dawn themed variants with theme awareness
+        dawn: 'bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-orange-300 hover:via-pink-400 hover:to-purple-500 dark:from-orange-500 dark:via-pink-600 dark:to-purple-700',
 
         sunset:
-          'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 text-white font-medium shadow-[0_3px_14px_rgba(251,191,36,0.3)] hover:shadow-[0_6px_24px_rgba(251,191,36,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-yellow-300 hover:via-orange-400 hover:to-red-500',
+          'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-yellow-300 hover:via-orange-400 hover:to-red-500 dark:from-yellow-500 dark:via-orange-600 dark:to-red-700',
 
         // Material Design 3 inspired filled tonal with enhanced styling
         'filled-tonal':
-          'bg-gradient-to-br from-secondary/40 via-secondary/50 to-secondary/60 text-primary font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] hover:from-secondary/50 hover:via-secondary/60 hover:to-secondary/70 backdrop-blur-sm',
+          'bg-secondary/60 text-secondary-foreground font-medium shadow-sm hover:bg-secondary/80 hover:shadow-md hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] backdrop-blur-sm transition-all duration-200',
 
         // Enhanced toggle button variant
         toggle:
-          'border-2 border-input/60 bg-background/50 backdrop-blur-sm text-foreground font-medium hover:bg-accent/60 hover:text-accent-foreground hover:border-accent/70 data-[state=on]:bg-gradient-to-br data-[state=on]:from-primary/20 data-[state=on]:to-primary/30 data-[state=on]:text-primary data-[state=on]:border-primary/50 data-[state=on]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:scale-[1.01] active:scale-[0.99]',
+          'border-2 border-input bg-background/50 backdrop-blur-sm text-foreground font-medium hover:bg-accent hover:text-accent-foreground hover:border-accent data-[state=on]:bg-primary/10 data-[state=on]:text-primary data-[state=on]:border-primary/50 data-[state=on]:shadow-sm hover:scale-[1.01] active:scale-[0.99] transition-all duration-200',
       },
       size: {
         // Enhanced default sizes with better typography and spacing

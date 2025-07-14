@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from './theme-provider';
@@ -52,6 +54,12 @@ export const ThemeToggle = React.forwardRef<
     ref
   ) => {
     const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = React.useState(false);
+
+    // Prevent hydration mismatch by only rendering after mount
+    React.useEffect(() => {
+      setMounted(true);
+    }, []);
 
     const handleToggle = () => {
       if (showSystem) {
@@ -70,15 +78,16 @@ export const ThemeToggle = React.forwardRef<
     };
 
     const getIcon = () => {
+      const iconSize = size === 'icon' ? 'h-5 w-5' : 'h-4 w-4';
       switch (theme) {
         case 'light':
-          return <Sun className="h-4 w-4" />;
+          return <Sun className={iconSize} />;
         case 'dark':
-          return <Moon className="h-4 w-4" />;
+          return <Moon className={iconSize} />;
         case 'system':
-          return <Monitor className="h-4 w-4" />;
+          return <Monitor className={iconSize} />;
         default:
-          return <Sun className="h-4 w-4" />;
+          return <Sun className={iconSize} />;
       }
     };
 
@@ -94,6 +103,23 @@ export const ThemeToggle = React.forwardRef<
           return 'Light';
       }
     };
+
+    // Don't render anything until mounted to prevent hydration mismatch
+    if (!mounted) {
+      return (
+        <Button
+          ref={ref}
+          variant={variant}
+          size={size}
+          className={cn('transition-all', className)}
+          disabled
+          {...props}
+        >
+          <Sun className={size === 'icon' ? 'h-5 w-5' : 'h-4 w-4'} />
+          {showLabels && <span className="ml-2">Light</span>}
+        </Button>
+      );
+    }
 
     return (
       <Button
@@ -158,6 +184,12 @@ export const ThemeSelect = React.forwardRef<HTMLDivElement, ThemeSelectProps>(
     ref
   ) => {
     const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = React.useState(false);
+
+    // Prevent hydration mismatch by only rendering after mount
+    React.useEffect(() => {
+      setMounted(true);
+    }, []);
 
     const themes: Array<{
       value: 'light' | 'dark' | 'system';
@@ -170,6 +202,36 @@ export const ThemeSelect = React.forwardRef<HTMLDivElement, ThemeSelectProps>(
         ? [{ value: 'system' as const, icon: Monitor, label: 'System' }]
         : []),
     ];
+
+    // Don't render anything until mounted to prevent hydration mismatch
+    if (!mounted) {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            'inline-flex rounded-md border border-border p-1',
+            orientation === 'vertical' ? 'flex-col' : 'flex-row',
+            className
+          )}
+          role="radiogroup"
+          aria-label="Theme selection"
+          {...props}
+        >
+          <Button
+            variant="default"
+            size="sm"
+            disabled
+            className={cn(
+              'transition-all',
+              orientation === 'vertical' ? 'justify-start' : 'justify-center'
+            )}
+          >
+            <Sun className="h-4 w-4" />
+            {showLabels && <span className="ml-2">Light</span>}
+          </Button>
+        </div>
+      );
+    }
 
     return (
       <div
