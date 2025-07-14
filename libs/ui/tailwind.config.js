@@ -1,8 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ['class'],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
     './.storybook/**/*.{js,ts,jsx,tsx}',
+    '../**/*.{js,ts,jsx,tsx}', // Include other libs if needed
   ],
   theme: {
     container: {
@@ -13,6 +15,15 @@ module.exports = {
       },
     },
     extend: {
+      spacing: {
+        13: '3.25rem',
+        15: '3.75rem',
+        18: '4.5rem',
+      },
+      height: {
+        13: '3.25rem',
+        15: '3.75rem',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -47,6 +58,39 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // SkyScout brand colors
+        brand: {
+          primary: 'hsl(var(--brand-primary))',
+          secondary: 'hsl(var(--brand-secondary))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
+        // Aviation-themed colors
+        aviation: {
+          sky: 'hsl(var(--sky-blue))',
+          flight: 'hsl(var(--flight-blue))',
+          altitude: 'hsl(var(--altitude-blue))',
+          radar: 'hsl(var(--radar-green))',
+          warning: 'hsl(var(--warning-amber))',
+          critical: 'hsl(var(--critical-red))',
+        },
+        // Direct aviation color utilities
+        'sky-blue': 'hsl(var(--sky-blue))',
+        'flight-blue': 'hsl(var(--flight-blue))',
+        'altitude-blue': 'hsl(var(--altitude-blue))',
+        'radar-green': 'hsl(var(--radar-green))',
+        'warning-amber': 'hsl(var(--warning-amber))',
+        'critical-red': 'hsl(var(--critical-red))',
       },
       borderRadius: {
         lg: 'var(--radius)',

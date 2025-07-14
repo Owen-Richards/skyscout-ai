@@ -1,35 +1,127 @@
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '../lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap select-none relative overflow-hidden tracking-wide transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed motion-reduce:transition-none',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        // Simple test variants to verify Tailwind is working
+        default:
+          'bg-blue-600 text-white font-medium shadow-lg hover:bg-blue-700 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200',
+
+        // Premium gradient variant
+        premium:
+          'bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200',
+
+        // Test glass effect
+        glass:
+          'bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 text-gray-800 font-medium shadow-lg hover:bg-opacity-30 hover:shadow-xl transition-all duration-200',
+
+        // Soft neumorphism variant
+        soft: 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800 font-medium shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.1)] hover:shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(0,0,0,0.15),0_4px_8px_rgba(0,0,0,0.15)] hover:scale-[1.01] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] active:scale-[0.99] dark:from-gray-700 dark:to-gray-800 dark:text-gray-100',
+
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white font-medium shadow-[0_2px_8px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_16px_rgba(239,68,68,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-red-400 hover:via-red-500 hover:to-red-600',
+
         outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+          'border-2 border-input bg-background/50 backdrop-blur-sm text-foreground font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-accent/80 hover:text-accent-foreground hover:border-accent hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] dark:border-border/50 dark:hover:border-accent/50',
+
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-gradient-to-br from-secondary via-secondary/95 to-secondary/90 text-secondary-foreground font-medium shadow-[0_1px_3px_rgba(0,0,0,0.12)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.16)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] hover:from-secondary/95 hover:to-secondary/85',
+
+        ghost:
+          'text-foreground font-medium hover:bg-accent/80 hover:text-accent-foreground hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] backdrop-blur-sm',
+
+        link: 'text-primary font-medium underline-offset-4 hover:underline hover:text-primary/80 hover:scale-[1.02] active:scale-[0.98] tracking-normal',
+
+        success:
+          'bg-gradient-to-br from-emerald-500 via-green-600 to-green-700 text-white font-medium shadow-[0_2px_8px_rgba(34,197,94,0.3)] hover:shadow-[0_4px_16px_rgba(34,197,94,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-emerald-400 hover:via-green-500 hover:to-green-600',
+
+        warning:
+          'bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 text-white font-medium shadow-[0_2px_8px_rgba(245,158,11,0.3)] hover:shadow-[0_4px_16px_rgba(245,158,11,0.4)] hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] hover:from-amber-300 hover:via-orange-400 hover:to-amber-500',
+
+        // Aviation-themed variants with proper Tailwind colors
+        'sky-primary':
+          'bg-gradient-to-br from-sky-400 via-blue-500 to-cyan-600 text-white font-medium shadow-[0_2px_12px_rgba(56,189,248,0.3)] hover:shadow-[0_4px_20px_rgba(56,189,248,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-sky-300 hover:via-blue-400 hover:to-cyan-500 before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300',
+
+        'flight-action':
+          'bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 text-white font-semibold shadow-[0_3px_14px_rgba(79,70,229,0.3)] hover:shadow-[0_6px_24px_rgba(79,70,229,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-blue-500 hover:via-indigo-600 hover:to-purple-700 relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700',
+
+        altitude:
+          'bg-gradient-to-br from-slate-600 via-blue-700 to-indigo-800 text-white font-medium shadow-[0_2px_12px_rgba(71,85,105,0.3)] hover:shadow-[0_4px_20px_rgba(71,85,105,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-slate-500 hover:via-blue-600 hover:to-indigo-700',
+
+        // Sunset/Dawn themed variants
+        dawn: 'bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 text-white font-medium shadow-[0_3px_14px_rgba(251,146,60,0.3)] hover:shadow-[0_6px_24px_rgba(251,146,60,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-orange-300 hover:via-pink-400 hover:to-purple-500',
+
+        sunset:
+          'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 text-white font-medium shadow-[0_3px_14px_rgba(251,191,36,0.3)] hover:shadow-[0_6px_24px_rgba(251,191,36,0.4)] hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] hover:from-yellow-300 hover:via-orange-400 hover:to-red-500',
+
+        // Material Design 3 inspired filled tonal with enhanced styling
+        'filled-tonal':
+          'bg-gradient-to-br from-secondary/40 via-secondary/50 to-secondary/60 text-primary font-medium shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:scale-[1.01] hover:-translate-y-0.5 active:scale-[0.99] hover:from-secondary/50 hover:via-secondary/60 hover:to-secondary/70 backdrop-blur-sm',
+
+        // Enhanced toggle button variant
+        toggle:
+          'border-2 border-input/60 bg-background/50 backdrop-blur-sm text-foreground font-medium hover:bg-accent/60 hover:text-accent-foreground hover:border-accent/70 data-[state=on]:bg-gradient-to-br data-[state=on]:from-primary/20 data-[state=on]:to-primary/30 data-[state=on]:text-primary data-[state=on]:border-primary/50 data-[state=on]:shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:scale-[1.01] active:scale-[0.99]',
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
+        // Enhanced default sizes with better typography and spacing
+        default:
+          'h-10 px-5 py-2.5 text-sm rounded-xl font-medium tracking-wide',
+        sm: 'h-8 px-3.5 py-2 text-xs rounded-lg font-medium tracking-wide',
+        lg: 'h-12 px-8 py-3.5 text-base rounded-2xl font-medium tracking-wide',
+        xl: 'h-14 px-10 py-4 text-lg rounded-2xl font-semibold tracking-wide',
+
+        // Enhanced icon sizes with perfect visual balance
+        icon: 'h-10 w-10 rounded-xl',
+        'icon-sm': 'h-8 w-8 rounded-lg',
+        'icon-lg': 'h-12 w-12 rounded-2xl',
+        'icon-xl': 'h-14 w-14 rounded-2xl',
+
+        // Touch-friendly sizes with enhanced accessibility
+        touch:
+          'h-11 px-6 py-3 text-sm rounded-xl min-w-[44px] font-medium tracking-wide',
+        'touch-lg':
+          'h-12 px-8 py-3.5 text-base rounded-2xl min-w-[48px] font-medium tracking-wide',
+
+        // Compact sizes for dense UIs with improved readability
+        compact: 'h-7 px-3 py-1.5 text-xs rounded-lg font-medium',
+        'compact-icon': 'h-7 w-7 rounded-lg',
+
+        // Premium sizes for special actions
+        premium:
+          'h-12 px-9 py-3.5 text-base rounded-2xl font-semibold tracking-wide',
+        hero: 'h-16 px-12 py-5 text-xl rounded-3xl font-bold tracking-wide',
+      },
+      emphasis: {
+        // Enhanced emphasis levels with better visual hierarchy
+        high: 'font-semibold tracking-wide shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_0_rgba(0,0,0,0.15)]',
+        medium:
+          'font-medium tracking-wide shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.12)]',
+        low: 'font-normal tracking-normal shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] hover:shadow-[0_2px_6px_0_rgba(0,0,0,0.08)]',
+        none: 'font-normal tracking-normal shadow-none',
+      },
+      // New visual effect variants
+      effect: {
+        none: '',
+        glow: 'hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]',
+        'glow-warm': 'hover:shadow-[0_0_20px_rgba(251,146,60,0.5)]',
+        'glow-success': 'hover:shadow-[0_0_20px_rgba(34,197,94,0.5)]',
+        'glow-danger': 'hover:shadow-[0_0_20px_rgba(239,68,68,0.5)]',
+        shimmer:
+          'relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700',
       },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      emphasis: 'medium',
+      effect: 'none',
     },
   }
 );
@@ -38,9 +130,59 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  /**
+   * Shows a loading spinner and disables interaction
+   */
   loading?: boolean;
+  /**
+   * Icon displayed on the left side of the button text
+   */
   leftIcon?: React.ReactNode;
+  /**
+   * Icon displayed on the right side of the button text
+   */
   rightIcon?: React.ReactNode;
+  /**
+   * Makes the button expand to full width of its container
+   */
+  fullWidth?: boolean;
+  /**
+   * Adds Material Design inspired ripple effect on click
+   * @default false
+   */
+  ripple?: boolean;
+  /**
+   * Toggle state for toggle buttons (used with variant="toggle")
+   */
+  pressed?: boolean;
+  /**
+   * Callback when toggle state changes
+   */
+  onPressedChange?: (pressed: boolean) => void;
+  /**
+   * Minimum width override for consistent button sizes
+   */
+  minWidth?: string;
+  /**
+   * Button shape override with enhanced radius options
+   * @default 'default'
+   */
+  shape?: 'default' | 'rounded' | 'square' | 'pill' | 'organic';
+  /**
+   * Visual effect variants for enhanced interactivity
+   * @default 'none'
+   */
+  effect?:
+    | 'none'
+    | 'glow'
+    | 'glow-warm'
+    | 'glow-success'
+    | 'glow-danger'
+    | 'shimmer';
+  /**
+   * Accessibility label for screen readers
+   */
+  'aria-label'?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -49,26 +191,113 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size,
+      emphasis,
+      effect,
       asChild = false,
       loading = false,
       leftIcon,
       rightIcon,
       disabled,
       children,
+      fullWidth = false,
+      ripple = false,
+      pressed,
+      onPressedChange,
+      minWidth,
+      shape = 'default',
+      onClick,
+      'aria-label': ariaLabel,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
     const isDisabled = disabled || loading;
+    const isToggle = variant === 'toggle';
+    const [rippleArray, setRippleArray] = React.useState<
+      Array<{ x: number; y: number; size: number; key: number }>
+    >([]);
+
+    // Enhanced shape styles with organic curves
+    const shapeStyles = {
+      default: '',
+      rounded: 'rounded-full',
+      square: 'rounded-none',
+      pill: 'rounded-full px-8',
+      organic:
+        'rounded-[2rem_1rem_2rem_1rem] hover:rounded-[1rem_2rem_1rem_2rem] transition-all duration-500',
+    };
+
+    // Enhanced ripple effect with better physics
+    const handleClick = React.useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (ripple && !isDisabled) {
+          const button = event.currentTarget;
+          const rect = button.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height) * 1.5; // Larger ripple for better effect
+          const x = event.clientX - rect.left - size / 2;
+          const y = event.clientY - rect.top - size / 2;
+
+          const newRipple = {
+            x,
+            y,
+            size,
+            key: Date.now(),
+          };
+
+          setRippleArray(prev => [...prev, newRipple]);
+
+          // Remove ripple after animation with proper timing
+          setTimeout(() => {
+            setRippleArray(prev => prev.filter(r => r.key !== newRipple.key));
+          }, 800);
+        }
+
+        // Handle toggle functionality
+        if (isToggle && onPressedChange) {
+          onPressedChange(!pressed);
+        }
+
+        onClick?.(event);
+      },
+      [ripple, isDisabled, isToggle, pressed, onPressedChange, onClick]
+    );
+
+    // Determine loading icon size based on button size
+    const getLoadingIconSize = () => {
+      if (size === 'sm' || size === 'compact') return 'h-3 w-3';
+      if (
+        size === 'lg' ||
+        size === 'xl' ||
+        size === 'premium' ||
+        size === 'hero'
+      )
+        return 'h-5 w-5';
+      return 'h-4 w-4';
+    };
+
+    // Enhanced accessibility attributes
+    const accessibilityProps = {
+      'aria-label':
+        ariaLabel || (typeof children === 'string' ? children : undefined),
+      'aria-disabled': isDisabled,
+      'aria-pressed': isToggle ? pressed : undefined,
+      'data-state': isToggle ? (pressed ? 'on' : 'off') : undefined,
+      role: isToggle ? 'button' : undefined,
+    };
 
     // When using asChild, we need to pass through only the children
     // to avoid React.Children.only errors with Slot
     if (asChild) {
       return (
         <Slot
-          className={cn(buttonVariants({ variant, size, className }))}
+          className={cn(
+            buttonVariants({ variant, size, emphasis, effect, className }),
+            fullWidth && 'w-full',
+            shapeStyles[shape]
+          )}
           ref={ref}
+          {...accessibilityProps}
           {...props}
         >
           {children}
@@ -78,23 +307,128 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, emphasis, effect, className }),
+          fullWidth && 'w-full',
+          shapeStyles[shape],
+          minWidth && `min-w-[${minWidth}]`,
+          // Enhanced focus styles
+          'focus-visible:ring-4 focus-visible:ring-ring/20 focus-visible:ring-offset-4',
+          // Improved disabled styles
+          isDisabled &&
+            'saturate-50 cursor-not-allowed transform-none hover:transform-none hover:shadow-none'
+        )}
         ref={ref}
         disabled={isDisabled}
-        aria-disabled={isDisabled}
+        onClick={handleClick}
+        style={minWidth ? { minWidth } : undefined}
+        {...accessibilityProps}
         {...props}
       >
-        {loading && (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        {/* Enhanced ripple effect container */}
+        {ripple && (
+          <span className="absolute inset-0 overflow-hidden rounded-[inherit] pointer-events-none">
+            {rippleArray.map(ripple => (
+              <span
+                key={ripple.key}
+                className="absolute bg-white/30 rounded-full animate-ping opacity-75"
+                style={{
+                  left: ripple.x,
+                  top: ripple.y,
+                  width: ripple.size,
+                  height: ripple.size,
+                  animationDuration: '800ms',
+                  animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                  animationFillMode: 'forwards',
+                }}
+              />
+            ))}
+          </span>
         )}
+
+        {/* Enhanced loading state with better visual hierarchy */}
+        {loading && (
+          <Loader2
+            className={cn(
+              'animate-spin flex-shrink-0',
+              getLoadingIconSize(),
+              children ? 'mr-2.5' : '',
+              size === 'sm' && children && 'mr-2',
+              size === 'lg' && children && 'mr-3',
+              size === 'xl' && children && 'mr-3.5'
+            )}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Enhanced left icon with perfect spacing */}
         {!loading && leftIcon && (
-          <span className="mr-2" aria-hidden="true">
+          <span
+            className={cn(
+              'flex-shrink-0 flex items-center justify-center relative z-10',
+              children ? 'mr-2.5' : '',
+              size === 'sm' && children && 'mr-2',
+              size === 'compact' && children && 'mr-1.5',
+              size === 'lg' && children && 'mr-3',
+              size === 'xl' && children && 'mr-3.5',
+              size === 'premium' && children && 'mr-3.5',
+              size === 'hero' && children && 'mr-4',
+              // Icon size adjustments
+              (size === 'sm' || size === 'compact') &&
+                '[&>svg]:h-3.5 [&>svg]:w-3.5',
+              size === 'default' && '[&>svg]:h-4 [&>svg]:w-4',
+              (size === 'lg' || size === 'premium') &&
+                '[&>svg]:h-5 [&>svg]:w-5',
+              (size === 'xl' || size === 'hero') && '[&>svg]:h-6 [&>svg]:w-6'
+            )}
+            aria-hidden="true"
+          >
             {leftIcon}
           </span>
         )}
-        {children}
+
+        {/* Enhanced button text content with better typography */}
+        {children && (
+          <span
+            className={cn(
+              'relative z-10 flex items-center justify-center',
+              'truncate',
+              // Enhanced text sizing
+              size === 'hero' && 'text-xl font-bold',
+              size === 'xl' && 'text-lg font-semibold',
+              size === 'premium' && 'text-base font-semibold',
+              size === 'lg' && 'text-base font-medium',
+              size === 'default' && 'text-sm font-medium',
+              size === 'sm' && 'text-xs font-medium',
+              size === 'compact' && 'text-xs font-medium'
+            )}
+          >
+            {children}
+          </span>
+        )}
+
+        {/* Enhanced right icon with perfect spacing */}
         {!loading && rightIcon && (
-          <span className="ml-2" aria-hidden="true">
+          <span
+            className={cn(
+              'flex-shrink-0 flex items-center justify-center relative z-10',
+              children ? 'ml-2.5' : '',
+              size === 'sm' && children && 'ml-2',
+              size === 'compact' && children && 'ml-1.5',
+              size === 'lg' && children && 'ml-3',
+              size === 'xl' && children && 'ml-3.5',
+              size === 'premium' && children && 'ml-3.5',
+              size === 'hero' && children && 'ml-4',
+              // Icon size adjustments
+              (size === 'sm' || size === 'compact') &&
+                '[&>svg]:h-3.5 [&>svg]:w-3.5',
+              size === 'default' && '[&>svg]:h-4 [&>svg]:w-4',
+              (size === 'lg' || size === 'premium') &&
+                '[&>svg]:h-5 [&>svg]:w-5',
+              (size === 'xl' || size === 'hero') && '[&>svg]:h-6 [&>svg]:w-6'
+            )}
+            aria-hidden="true"
+          >
             {rightIcon}
           </span>
         )}

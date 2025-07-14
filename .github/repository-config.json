@@ -44,11 +44,7 @@
     "main": {
       "required_status_checks": {
         "strict": true,
-        "contexts": [
-          "ci/lint-and-type-check",
-          "ci/test",
-          "ci/build"
-        ]
+        "contexts": ["ci/lint-and-type-check", "ci/test", "ci/build"]
       },
       "enforce_admins": false,
       "required_pull_request_reviews": {

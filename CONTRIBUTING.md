@@ -6,7 +6,7 @@ We welcome contributions to SkyScout AI! This document provides guidelines for c
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - Docker & Docker Compose
 - Rust (for search engine)
 - Go (for search fallback)

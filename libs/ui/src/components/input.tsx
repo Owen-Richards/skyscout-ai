@@ -3,18 +3,21 @@ import { cn } from '../lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 
 const inputVariants = cva(
-  'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+  'flex w-full rounded-lg border bg-background text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 hover:border-ring/50 focus:border-ring',
   {
     variants: {
       variant: {
-        default: 'border-input',
-        error: 'border-destructive focus-visible:ring-destructive',
-        success: 'border-green-500 focus-visible:ring-green-500',
+        default:
+          'border-input shadow-sm hover:shadow-md focus-visible:shadow-md',
+        error:
+          'border-destructive focus-visible:ring-destructive shadow-sm shadow-destructive/10',
+        success:
+          'border-green-500 focus-visible:ring-green-500 shadow-sm shadow-green-500/10',
       },
       size: {
         default: 'h-10 px-3 py-2',
-        sm: 'h-9 px-3 py-2',
-        lg: 'h-11 px-4 py-2',
+        sm: 'h-8 px-3 py-1.5 text-xs',
+        lg: 'h-12 px-4 py-3 text-base',
       },
     },
     defaultVariants: {
@@ -94,7 +97,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block text-foreground"
           >
             {label}
             {required && <span className="text-destructive ml-1">*</span>}
@@ -103,7 +106,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative">
           {startIcon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-colors">
               {startIcon}
             </div>
           )}
@@ -113,8 +116,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               inputVariants({ variant: currentVariant, size, className }),
               startIcon && 'pl-10',
-              endIcon && 'pr-10',
-              loading && 'pr-10'
+              (endIcon || loading) && 'pr-10'
             )}
             ref={ref}
             id={inputId}
@@ -126,10 +128,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
 
           {(endIcon || loading) && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground transition-colors">
               {loading ? (
                 <div
-                  className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"
+                  className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"
                   role="status"
                   aria-label="Loading"
                 />
