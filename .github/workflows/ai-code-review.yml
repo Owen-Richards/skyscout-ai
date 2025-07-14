@@ -15,7 +15,7 @@ jobs:
   ai-code-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,7 +65,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             // Read complexity report if exists
             let complexityReport = '';
             try {
@@ -76,22 +76,22 @@ jobs:
 
             const comment = `
             ## 🤖 AI Code Review Summary
-            
+
             This PR has been automatically reviewed for:
             - ✅ TypeScript type safety
             - ✅ Code formatting and linting
             - ✅ Test coverage
             - ✅ Architectural compliance
-            
+
             ${complexityReport}
-            
+
             ### 📋 Checklist for Review
             - [ ] Follows PROJECT_VISION.md priorities
             - [ ] Includes comprehensive tests
             - [ ] Updates documentation if needed
             - [ ] Considers performance implications
             - [ ] Follows security best practices
-            
+
             ### 🎯 Next Steps
             This PR is ready for human review. Please ensure it aligns with the project vision and coding standards.
             `;
@@ -106,7 +106,7 @@ jobs:
   auto-feature-development:
     if: github.event_name == 'issue_comment' && contains(github.event.comment.body, '/ai-develop')
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -151,18 +151,18 @@ jobs:
           script: |
             const comment = `
             ## 🤖 AI Development Started
-            
+
             I'm working on: **${{ steps.parse-request.outputs.feature-request }}**
-            
+
             Branch created: \`${process.env.BRANCH_NAME}\`
-            
+
             I'll:
             1. 📊 Analyze the PROJECT_VISION.md requirements
             2. 🏗️ Follow the established architecture patterns
             3. ✅ Write comprehensive tests
             4. 📚 Update documentation
             5. 🔄 Create a PR for your review
-            
+
             Estimated completion: 15-30 minutes
             `;
 
@@ -176,7 +176,7 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -198,11 +198,11 @@ jobs:
           script: |
             const comment = `
             ## 🔒 Security Scan Complete
-            
+
             - ✅ Dependency vulnerability scan
             - ✅ Static code analysis (CodeQL)
             - ✅ Security best practices check
-            
+
             No security issues detected in this PR.
             `;
 

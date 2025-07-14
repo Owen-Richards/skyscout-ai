@@ -16,7 +16,9 @@ SkyScout AI is a cutting-edge flight discovery platform built with modern micros
 ## AI Development Guidelines
 
 ### Autonomous Development
+
 When building features, always:
+
 1. Reference `.github/PROJECT_VISION.md` for project goals and priorities
 2. Follow the established architecture patterns
 3. Maintain type safety across all layers
@@ -27,6 +29,7 @@ When building features, always:
 ### Code Quality Standards
 
 #### TypeScript
+
 - Use strict TypeScript configuration
 - Prefer interfaces over types for object shapes
 - Use Zod for runtime validation
@@ -34,6 +37,7 @@ When building features, always:
 - Implement proper error handling with Result types
 
 #### React/Next.js
+
 - Use App Router with server components by default
 - Implement client components only when interactivity is needed
 - Use Tailwind CSS for styling with design system tokens
@@ -41,6 +45,7 @@ When building features, always:
 - Optimize for Core Web Vitals
 
 #### Backend Services
+
 - Use dependency injection patterns
 - Implement proper error handling and logging
 - Follow RESTful API design for external APIs
@@ -50,6 +55,7 @@ When building features, always:
 ### Architecture Patterns
 
 #### Microservices
+
 - Each service should have a single responsibility
 - Use event-driven architecture for service communication
 - Implement circuit breakers and retry logic
@@ -57,12 +63,14 @@ When building features, always:
 - Design for fault tolerance
 
 #### Data Management
+
 - Use appropriate databases for each use case
 - Implement caching strategies at multiple layers
 - Design for eventual consistency in distributed systems
 - Follow CQRS patterns for read/write separation
 
 #### Security
+
 - Implement OAuth2/JWT authentication
 - Use environment variables for secrets
 - Follow principle of least privilege
@@ -119,6 +127,7 @@ Based on PROJECT_VISION.md, focus on:
 ## Code Examples
 
 ### Component Structure
+
 ```tsx
 // Follow this pattern for React components
 'use client';
@@ -131,11 +140,11 @@ interface ComponentNameProps extends ComponentProps<'div'> {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function ComponentName({ 
-  variant = 'default', 
-  size = 'md', 
+export function ComponentName({
+  variant = 'default',
+  size = 'md',
   className,
-  ...props 
+  ...props
 }: ComponentNameProps) {
   return (
     <div
@@ -154,6 +163,7 @@ export function ComponentName({
 ```
 
 ### API Route Pattern
+
 ```tsx
 // Use this pattern for tRPC procedures
 import { z } from 'zod';
@@ -161,10 +171,12 @@ import { publicProcedure, router } from '../trpc';
 
 export const featureRouter = router({
   getData: publicProcedure
-    .input(z.object({
-      id: z.string(),
-      filters: z.object({}).optional(),
-    }))
+    .input(
+      z.object({
+        id: z.string(),
+        filters: z.object({}).optional(),
+      })
+    )
     .query(async ({ input }) => {
       // Implementation
       return { data: [] };

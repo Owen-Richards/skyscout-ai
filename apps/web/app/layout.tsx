@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { TRPCProvider } from './components/providers/trpc-provider';
+import { ThemeProvider } from '@skyscout/ui';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -17,9 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <TRPCProvider>{children}</TRPCProvider>
+        <ThemeProvider
+          defaultTheme="system"
+          enableSystem
+          storageKey="skyscout-theme"
+        >
+          <TRPCProvider>{children}</TRPCProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
