@@ -54,16 +54,44 @@ body {
   }
 }
 
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
 .animate-slide-in {
-  animation: slideIn 0.5s ease-out;
+  animation: slideIn 0.8s ease-out forwards;
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-float-slow {
+  animation: float-slow 10s ease-in-out infinite;
+  animation-delay: 4s;
 }
 
 /* Glass morphism utilities */
@@ -234,4 +262,48 @@ body {
     background: white !important;
     color: black !important;
   }
+}
+
+/* Enhanced theme-aware utilities */
+.glass-card {
+  @apply backdrop-blur-sm bg-card/50 border border-border/50;
+}
+
+.hover-lift {
+  @apply transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg;
+}
+
+.theme-transition {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Better contrast for light mode elements */
+.light .enhanced-contrast {
+  --foreground: 240 10% 3.9%;
+  --muted-foreground: 240 3.8% 36.1%;
+}
+
+/* Enhanced dark mode readability */
+.dark .enhanced-contrast {
+  --foreground: 0 0% 98%;
+  --muted-foreground: 240 5% 74.9%;
+}
+
+/* Grid pattern for backgrounds */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+/* Enhanced focus states for accessibility */
+.enhanced-focus:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
 }

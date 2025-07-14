@@ -4,6 +4,14 @@
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./globals.css": "./src/globals.css"
+  },
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly",
     "dev": "vite build --watch",
@@ -22,7 +30,8 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
     "react-hook-form": "^7.48.2",
-    "tailwind-merge": "^2.2.0"
+    "tailwind-merge": "^2.2.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^9.0.16",

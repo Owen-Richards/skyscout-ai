@@ -3,16 +3,16 @@ import { cn } from '../lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 
 const inputVariants = cva(
-  'flex w-full rounded-lg border bg-background text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 hover:border-ring/50 focus:border-ring',
+  'flex w-full rounded-lg border bg-background text-foreground text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 hover:border-ring/50 focus:border-ring',
   {
     variants: {
       variant: {
         default:
-          'border-input shadow-sm hover:shadow-md focus-visible:shadow-md',
+          'border-input bg-background/50 shadow-sm hover:shadow-md hover:bg-background focus-visible:shadow-md focus-visible:bg-background',
         error:
-          'border-destructive focus-visible:ring-destructive shadow-sm shadow-destructive/10',
+          'border-destructive bg-background/50 focus-visible:ring-destructive shadow-sm shadow-destructive/10 hover:bg-background focus-visible:bg-background',
         success:
-          'border-green-500 focus-visible:ring-green-500 shadow-sm shadow-green-500/10',
+          'border-green-500 bg-background/50 focus-visible:ring-green-500 shadow-sm shadow-green-500/10 hover:bg-background focus-visible:bg-background',
       },
       size: {
         default: 'h-10 px-3 py-2',

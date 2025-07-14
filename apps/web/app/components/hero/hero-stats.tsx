@@ -19,10 +19,12 @@ export function HeroStats({ stats, className }: HeroStatsProps) {
           className="text-center animate-fade-in"
           style={{ animationDelay: `${index * 0.1 + 0.8}s` }}
         >
-          <div className="text-3xl lg:text-4xl font-bold text-white mb-2">
+          <div className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
             {stat.value}
           </div>
-          <div className="text-white/70 text-sm lg:text-base">{stat.label}</div>
+          <div className="text-muted-foreground text-sm lg:text-base">
+            {stat.label}
+          </div>
         </div>
       ))}
     </div>
