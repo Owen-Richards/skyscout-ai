@@ -6,5 +6,5 @@
 export { HeroBackground } from './hero-background';
 export { HeroContent } from './hero-content';
 export { HeroFeatureCard } from './hero-feature-card';
-export { HeroStats } from './hero-stats';
 export { HeroSection } from './hero-section';
+export { HeroStats } from './hero-stats';

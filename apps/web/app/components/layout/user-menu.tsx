@@ -20,6 +20,7 @@ import {
 } from '@skyscout/ui';
 import { ChevronDown, LogOut, Star } from 'lucide-react';
 import { USER_MENU_ITEMS } from '../../constants/navigation';
+import { useAppTranslation } from '../../contexts/translation-context';
 import type { UserProfile } from '../../types/navigation';
 
 interface UserMenuProps {
@@ -27,6 +28,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ className }: UserMenuProps) {
+  const { tUser } = useAppTranslation();
   // Mock user state - in real app this would come from auth context
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user] = useState<UserProfile>({
@@ -43,9 +45,13 @@ export function UserMenu({ className }: UserMenuProps) {
           href="/login"
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
-          Sign In
+          {tUser('sign in')}
         </Link>
-        <Button asChild>
+        <Button
+          asChild
+          variant="sky-primary"
+          className="relative overflow-hidden"
+        >
           <Link href="/signup">Get Started</Link>
         </Button>
       </div>
@@ -74,7 +80,7 @@ export function UserMenu({ className }: UserMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{tUser('account')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         {USER_MENU_ITEMS.map(group => (
@@ -85,7 +91,7 @@ export function UserMenu({ className }: UserMenuProps) {
                 <DropdownMenuItem key={item.href} asChild>
                   <Link href={item.href} className="flex items-center gap-2">
                     <Icon className="h-4 w-4" />
-                    {item.label}
+                    {tUser(item.label)}
                   </Link>
                 </DropdownMenuItem>
               );
@@ -96,7 +102,7 @@ export function UserMenu({ className }: UserMenuProps) {
 
         <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
           <LogOut className="h-4 w-4 mr-2" />
-          Sign Out
+          {tUser('sign out')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

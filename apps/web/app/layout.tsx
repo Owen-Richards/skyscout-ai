@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { TRPCProvider } from './components/providers/trpc-provider';
 import { ThemeProvider } from '@skyscout/ui';
+import { I18nProvider } from './contexts/i18n-context';
+import { TranslationProvider } from './contexts/translation-context';
 import './globals.css';
 
 const inter = Inter({
@@ -107,20 +109,24 @@ export default function RootLayout({
           enableSystem
           storageKey="skyscout-theme"
         >
-          <TRPCProvider>
-            {/* Skip to main content for accessibility */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-primary text-primary-foreground rounded-md"
-            >
-              Skip to main content
-            </a>
+          <I18nProvider>
+            <TranslationProvider>
+              <TRPCProvider>
+                {/* Skip to main content for accessibility */}
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-primary text-primary-foreground rounded-md"
+                >
+                  Skip to main content
+                </a>
 
-            {/* Main app container */}
-            <div className="relative flex min-h-screen flex-col">
-              {children}
-            </div>
-          </TRPCProvider>
+                {/* Main app container */}
+                <div className="relative flex min-h-screen flex-col">
+                  {children}
+                </div>
+              </TRPCProvider>
+            </TranslationProvider>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

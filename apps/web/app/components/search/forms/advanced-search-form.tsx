@@ -250,9 +250,10 @@ export function AdvancedSearchForm({
 
           <Button
             type="submit"
+            variant="flight-action"
             disabled={!canSubmit}
             loading={formState.isLoading}
-            className="gap-2 min-w-32"
+            className="gap-2 min-w-32 relative overflow-hidden"
           >
             <Search className="h-4 w-4" />
             {formState.isLoading ? 'Searching...' : 'Search Flights'}

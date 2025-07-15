@@ -7,6 +7,7 @@
 
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { DealCard } from './deal-card';
+import { useAppTranslation } from '../../contexts/translation-context';
 import type { DealsListProps } from '../../types/deals';
 
 export function DealsList({
@@ -17,12 +18,14 @@ export function DealsList({
   loading = false,
   error,
 }: DealsListProps) {
+  const { tDeals } = useAppTranslation();
+
   if (loading) {
     return (
       <div className={`flex items-center justify-center p-8 ${className}`}>
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
-          <p className="text-muted-foreground">Loading amazing deals...</p>
+          <p className="text-muted-foreground">{tDeals('loading')}</p>
         </div>
       </div>
     );
@@ -33,9 +36,7 @@ export function DealsList({
       <div className={`flex items-center justify-center p-8 ${className}`}>
         <div className="text-center">
           <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
-          <p className="text-destructive font-medium mb-1">
-            Failed to load deals
-          </p>
+          <p className="text-destructive font-medium mb-1">{tDeals('error')}</p>
           <p className="text-muted-foreground text-sm">{error}</p>
         </div>
       </div>
@@ -45,9 +46,7 @@ export function DealsList({
   if (deals.length === 0) {
     return (
       <div className={`text-center p-8 ${className}`}>
-        <p className="text-muted-foreground">
-          No deals available at the moment.
-        </p>
+        <p className="text-muted-foreground">{tDeals('no_deals')}</p>
       </div>
     );
   }
