@@ -6,6 +6,7 @@
 import Link from 'next/link';
 import { Badge, cn } from '@skyscout/ui';
 import { useActiveRoute } from '../../hooks/use-navigation';
+import { useAppTranslation } from '../../contexts/translation-context';
 import { NAVIGATION_ITEMS } from '../../constants/navigation';
 
 interface NavigationItemsProps {
@@ -18,6 +19,7 @@ export function NavigationItems({
   variant = 'desktop',
 }: NavigationItemsProps) {
   const { isActiveRoute } = useActiveRoute();
+  const { tNav } = useAppTranslation();
 
   const baseItemClass =
     variant === 'desktop'
@@ -35,6 +37,11 @@ export function NavigationItems({
         const isActive = isActiveRoute(item.href);
         const Icon = item.icon;
 
+        // Get translated label based on the navigation key
+        const getNavLabel = (label: string) => {
+          return tNav(label);
+        };
+
         return (
           <Link
             key={item.href}
@@ -47,7 +54,7 @@ export function NavigationItems({
             )}
           >
             <Icon className="h-4 w-4" />
-            <span>{item.label}</span>
+            <span>{getNavLabel(item.label)}</span>
             {item.badge && (
               <Badge variant="secondary" className="ml-1 text-xs">
                 {item.badge}

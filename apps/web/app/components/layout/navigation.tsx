@@ -17,6 +17,7 @@ import { NavigationLogo } from './navigation-logo';
 import { NavigationItems } from './navigation-items';
 import { UserMenu } from './user-menu';
 import { MobileMenuToggle } from './mobile-menu-toggle';
+import { SettingsMenu } from '../navigation/settings-menu';
 
 interface NavigationProps {
   readonly className?: string;
@@ -49,6 +50,7 @@ export function Navigation({ className }: NavigationProps) {
             {/* Actions */}
             <div className="flex items-center space-x-4">
               <ThemeToggle />
+              <SettingsMenu className="hidden md:flex" />
               <UserMenu className="hidden md:flex" />
               <MobileMenuToggle
                 isOpen={isMobileMenuOpen}
@@ -63,7 +65,8 @@ export function Navigation({ className }: NavigationProps) {
           <div className="lg:hidden border-t bg-background/95 backdrop-blur-lg">
             <div className="container mx-auto px-4 py-4 space-y-4">
               <NavigationItems variant="mobile" />
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t space-y-4">
+                <SettingsMenu />
                 <UserMenu />
               </div>
             </div>

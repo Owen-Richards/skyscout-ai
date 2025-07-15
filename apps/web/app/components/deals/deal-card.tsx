@@ -7,6 +7,7 @@
 
 import { Plane, Clock, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Button, Card } from '@skyscout/ui';
+import { useAppTranslation } from '../../contexts/translation-context';
 import type { DealCardProps } from '../../types/deals';
 
 export function DealCard({
@@ -16,6 +17,8 @@ export function DealCard({
   className,
   showPrediction = true,
 }: DealCardProps) {
+  const { tDeals } = useAppTranslation();
+
   const handleCardClick = () => {
     onClick?.(deal);
   };
@@ -81,7 +84,7 @@ export function DealCard({
           </div>
           {deal.price.savings && (
             <p className="text-sm text-green-600 font-medium">
-              Save {deal.price.currency}
+              {tDeals('save_amount')} {deal.price.currency}
               {deal.price.savings}
             </p>
           )}
@@ -106,7 +109,8 @@ export function DealCard({
           <div className="flex items-center gap-2 mb-1">
             {getTrendIcon()}
             <span className="text-sm font-medium">
-              AI Prediction ({deal.aiPrediction.confidence}% confidence)
+              {tDeals('ai_insight')} ({deal.aiPrediction.confidence}%{' '}
+              {tDeals('confidence')})
             </span>
           </div>
           <p className="text-xs">{deal.aiPrediction.message}</p>
@@ -116,15 +120,20 @@ export function DealCard({
       {/* Actions */}
       <div className="flex gap-2">
         <Button
-          variant="outline"
+          variant="filled-tonal"
           size="sm"
           className="flex-1"
           onClick={handleCardClick}
         >
-          View Details
+          {tDeals('view_details')}
         </Button>
-        <Button size="sm" className="flex-1" onClick={handleBookingClick}>
-          Book Now
+        <Button
+          variant="sky-primary"
+          size="sm"
+          className="flex-1 relative overflow-hidden"
+          onClick={handleBookingClick}
+        >
+          {tDeals('book_now')}
         </Button>
       </div>
     </Card>
