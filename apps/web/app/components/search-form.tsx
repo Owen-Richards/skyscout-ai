@@ -24,7 +24,10 @@ export function SearchForm() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 -mt-16 relative z-10 max-w-6xl mx-auto">
+    <div
+      id="search-form"
+      className="bg-white rounded-2xl shadow-xl p-8 -mt-16 relative z-10 max-w-6xl mx-auto"
+    >
       <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         {tSearch('title')}
       </h2>
