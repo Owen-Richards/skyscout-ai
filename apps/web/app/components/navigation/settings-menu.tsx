@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Settings, Check, Globe, DollarSign, ChevronDown } from 'lucide-react';
 import { useI18n } from '../../contexts/i18n-context';
 import { useTranslation } from '../../hooks/use-translation';
@@ -20,9 +20,34 @@ export function SettingsMenu({ className = '' }: SettingsMenuProps) {
   const [activeSection, setActiveSection] = useState<
     'main' | 'language' | 'currency'
   >('main');
+  const menuRef = useRef<HTMLDivElement>(null);
   const { preferences, updatePreferences, currentLocale, currentCurrency } =
     useI18n();
   const { t } = useTranslation();
+
+  // Handle click outside to close menu
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        closeMenu();
+      }
+    }
+
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleEscapeKey);
+      };
+    }
+  }, [isOpen]);
 
   const handleLocaleChange = (locale: string) => {
     updatePreferences({ locale });
@@ -160,28 +185,24 @@ export function SettingsMenu({ className = '' }: SettingsMenuProps) {
   );
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="inline-flex items-center justify-center rounded-md w-8 h-8 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background"
         aria-label={t('settings.title')}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
       >
         <Settings className="h-4 w-4" />
         <span className="sr-only">{t('settings.title')}</span>
       </button>
 
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 z-40" onClick={closeMenu} />
-
-          {/* Dropdown Menu */}
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-            {activeSection === 'main' && renderMainMenu()}
-            {activeSection === 'language' && renderLanguageMenu()}
-            {activeSection === 'currency' && renderCurrencyMenu()}
-          </div>
-        </>
+        <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+          {activeSection === 'main' && renderMainMenu()}
+          {activeSection === 'language' && renderLanguageMenu()}
+          {activeSection === 'currency' && renderCurrencyMenu()}
+        </div>
       )}
     </div>
   );

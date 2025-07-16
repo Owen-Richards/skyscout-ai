@@ -36,8 +36,8 @@ export const translations = {
     'hero.title': 'Your AI-Powered Flight Discovery Engine',
     'hero.subtitle':
       'Find the perfect flights with intelligent recommendations, real-time pricing, and seamless booking experience.',
-    'hero.cta': "Find Deals Now - It's Free",
-    'hero.secondary_cta': 'Watch 60s Demo',
+    'hero.cta': 'Search Flights Now',
+    'hero.secondary_cta': 'Set Price Alerts',
     'hero.trust_badge': '#1 AI Flight Discovery Platform',
     'hero.users_count': '2M+ travelers trust us',
     'hero.savings':
@@ -192,8 +192,8 @@ export const translations = {
     'hero.title': 'Tu Motor de Descubrimiento de Vuelos con IA',
     'hero.subtitle':
       'Encuentra los vuelos perfectos con recomendaciones inteligentes, precios en tiempo real y una experiencia de reserva fluida.',
-    'hero.cta': 'Encuentra Ofertas Ahora - Es Gratis',
-    'hero.secondary_cta': 'Ver Demo de 60s',
+    'hero.cta': 'Buscar Vuelos Ahora',
+    'hero.secondary_cta': 'Configurar Alertas de Precio',
     'hero.trust_badge': 'Plataforma #1 de Descubrimiento de Vuelos con IA',
     'hero.users_count': 'Más de 2M viajeros confían en nosotros',
     'hero.savings':
@@ -357,8 +357,8 @@ export const translations = {
     'hero.title': 'Votre Moteur de Découverte de Vols IA',
     'hero.subtitle':
       'Trouvez les vols parfaits avec des recommandations intelligentes, des prix en temps réel et une expérience de réservation fluide.',
-    'hero.cta': "Trouvez des Offres Maintenant - C'est Gratuit",
-    'hero.secondary_cta': 'Voir la Démo 60s',
+    'hero.cta': 'Rechercher des Vols Maintenant',
+    'hero.secondary_cta': 'Configurer des Alertes de Prix',
     'hero.trust_badge': 'Plateforme #1 de Découverte de Vols IA',
     'hero.users_count': 'Plus de 2M voyageurs nous font confiance',
     'hero.savings':
@@ -525,8 +525,8 @@ export const translations = {
     'hero.title': 'Ihre KI-gestützte Flugentdeckungsmaschine',
     'hero.subtitle':
       'Finden Sie die perfekten Flüge mit intelligenten Empfehlungen, Echtzeitpreisen und nahtloser Buchungserfahrung.',
-    'hero.cta': 'Angebote Jetzt Finden - Kostenlos',
-    'hero.secondary_cta': '60s Demo Ansehen',
+    'hero.cta': 'Flüge Jetzt Suchen',
+    'hero.secondary_cta': 'Preisbenachrichtigungen Einrichten',
     'hero.trust_badge': '#1 KI-Flugentdeckungsplattform',
     'hero.users_count': 'Über 2M Reisende vertrauen uns',
     'hero.savings':

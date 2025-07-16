@@ -71,12 +71,16 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
 
   const tSearch = (key: string): string => {
     const searchMap: Record<string, TranslationKey> = {
+      title: 'search.search_flights',
       from: 'search.from',
       to: 'search.to',
       departure: 'search.departure',
       return: 'search.return',
       passengers: 'search.passengers',
+      passenger: 'search.passengers',
       search_flights: 'search.search_flights',
+      originPlaceholder: 'search.from',
+      destinationPlaceholder: 'search.to',
       round_trip: 'search.round_trip',
       one_way: 'search.one_way',
       multi_city: 'search.multi_city',
