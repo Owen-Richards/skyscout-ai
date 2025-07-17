@@ -116,20 +116,27 @@ export function FlightFilters({
 
       if (isMultiSelect) {
         if (!newFilters[category]) newFilters[category] = [];
-        const currentValues = newFilters[category] as string[];
+        const currentValues = Array.isArray(newFilters[category])
+          ? (newFilters[category] as string[])
+          : [];
 
         if (currentValues.includes(value)) {
-          newFilters[category] = currentValues.filter(
+          const filteredValues = currentValues.filter(
             (v: string) => v !== value
           );
-          if ((newFilters[category] as string[]).length === 0) {
+          if (filteredValues.length === 0) {
             delete newFilters[category];
+          } else {
+            newFilters[category] = filteredValues;
           }
         } else {
           newFilters[category] = [...currentValues, value];
         }
       } else {
-        if (newFilters[category] === value) {
+        const currentValue = Array.isArray(newFilters[category])
+          ? (newFilters[category] as unknown[])?.[0]
+          : newFilters[category];
+        if (currentValue === value) {
           delete newFilters[category];
         } else {
           newFilters[category] = [value];
@@ -141,10 +148,23 @@ export function FlightFilters({
   };
 
   const applyPreset = (preset: (typeof presets)[0]) => {
-    setActiveFilters(preset.filters);
-    if (preset.filters.priceRange) {
-      setPriceRange(preset.filters.priceRange);
-    }
+    const newFilters: FilterValues = {};
+
+    // Convert preset filters to FilterValues format
+    Object.entries(preset.filters).forEach(([key, value]) => {
+      if (key === 'priceRange' && Array.isArray(value) && value.length >= 2) {
+        newFilters[key as keyof FilterValues] = [value[0], value[1]] as [
+          number,
+          number,
+        ];
+        setPriceRange([value[0], value[1]] as [number, number]);
+      } else {
+        newFilters[key as keyof FilterValues] =
+          value as FilterValues[keyof FilterValues];
+      }
+    });
+
+    setActiveFilters(newFilters);
   };
 
   const clearAllFilters = () => {
@@ -200,7 +220,7 @@ export function FlightFilters({
             {activeFilters[id] && (
               <Badge variant="secondary" className="text-xs">
                 {Array.isArray(activeFilters[id])
-                  ? activeFilters[id].length
+                  ? (activeFilters[id] as string[]).length
                   : 1}
               </Badge>
             )}
@@ -259,7 +279,7 @@ export function FlightFilters({
                 key={preset.id}
                 variant="outline"
                 size="sm"
-                onClick={() => applyPreset(preset.filters)}
+                onClick={() => applyPreset(preset)}
                 className="h-auto p-3 flex flex-col items-center gap-1 text-xs"
               >
                 <Icon className="h-4 w-4" />
