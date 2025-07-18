@@ -1,18 +1,19 @@
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
 import asyncio
+import json
 import logging
 import os
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
 import joblib
+import numpy as np
+import pandas as pd
+import redis
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
-import redis
-import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

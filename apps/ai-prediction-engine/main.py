@@ -1,13 +1,13 @@
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-import uvicorn
-from loguru import logger
 
-from app.api.routes import predictions, analytics, models
+import uvicorn
+from app.api.routes import analytics, models, predictions
 from app.core.config import settings
-from app.core.database import engine, Base
+from app.core.database import Base, engine
 from app.ml.model_manager import ModelManager
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 
 # Initialize model manager
 model_manager = ModelManager()

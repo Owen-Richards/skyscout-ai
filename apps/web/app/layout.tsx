@@ -1,7 +1,7 @@
+import { ThemeProvider } from '@skyscout/ui';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { TRPCProvider } from './components/providers/trpc-provider';
-import { ThemeProvider } from '@skyscout/ui';
 import { I18nProvider } from './contexts/i18n-context';
 import { TranslationProvider } from './contexts/translation-context';
 import './globals.css';
