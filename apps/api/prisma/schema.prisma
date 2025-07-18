@@ -1,0 +1,430 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  emailVerified     Boolean   @default(false)
+  passwordHash      String
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime?
+  phoneNumber       String?
+  preferredCurrency String    @default("USD")
+  preferredLanguage String    @default("en")
+  avatar            String?
+  
+  // Authentication
+  emailVerificationToken String?
+  emailVerificationExpires DateTime?
+  passwordResetToken     String?
+  passwordResetExpires   DateTime?
+  lastLogin             DateTime?
+  
+  // Preferences
+  preferences       UserPreferences?
+  
+  // Relations
+  searches          FlightSearch[]
+  bookings          Booking[]
+  priceAlerts       PriceAlert[]
+  savedFlights      SavedFlight[]
+  reviews           Review[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
+
+model UserPreferences {
+  id                  String  @id @default(cuid())
+  userId              String  @unique
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Notification preferences
+  emailNotifications  Boolean @default(true)
+  smsNotifications    Boolean @default(false)
+  priceAlerts         Boolean @default(true)
+  newsletter          Boolean @default(true)
+  
+  // Travel preferences
+  cabin               String  @default("economy") // economy, premium_economy, business, first
+  preferredAirlines   String[] // Array of airline codes
+  maxStops            Int     @default(2)
+  seatPreference      String? // aisle, window, middle
+  mealPreference      String? // vegetarian, vegan, kosher, halal, etc.
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("user_preferences")
+}
+
+model Airport {
+  id          String @id @default(cuid())
+  iataCode    String @unique
+  icaoCode    String?
+  name        String
+  city        String
+  country     String
+  countryCode String
+  timezone    String
+  latitude    Float
+  longitude   Float
+  elevation   Int?
+  
+  // Additional info
+  terminals   Int?
+  runways     Int?
+  website     String?
+  
+  // Relations
+  departureFlights FlightLeg[] @relation("DepartureAirport")
+  arrivalFlights   FlightLeg[] @relation("ArrivalAirport")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("airports")
+}
+
+model Airline {
+  id       String @id @default(cuid())
+  iataCode String @unique
+  icaoCode String?
+  name     String
+  logo     String?
+  country  String?
+  website  String?
+  
+  // Relations
+  flights  FlightLeg[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("airlines")
+}
+
+model FlightSearch {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id])
+  
+  // Search parameters
+  origin        String
+  destination   String
+  departureDate DateTime
+  returnDate    DateTime?
+  adults        Int      @default(1)
+  children      Int      @default(0)
+  infants       Int      @default(0)
+  cabin         String   @default("economy")
+  currency      String   @default("USD")
+  
+  // Search metadata
+  resultsCount  Int      @default(0)
+  searchTime    Float    @default(0) // in milliseconds
+  ipAddress     String?
+  userAgent     String?
+  
+  createdAt DateTime @default(now())
+  
+  @@map("flight_searches")
+}
+
+model FlightResult {
+  id            String      @id @default(cuid())
+  searchId      String?
+  
+  // Pricing
+  totalPrice    Float
+  currency      String      @default("USD")
+  priceBreakdown Json?      // taxes, fees, etc.
+  
+  // Flight legs (outbound + return)
+  outboundLeg   FlightLeg   @relation("OutboundFlight", fields: [outboundId], references: [id])
+  outboundId    String      @unique
+  returnLeg     FlightLeg?  @relation("ReturnFlight", fields: [returnId], references: [id])
+  returnId      String?     @unique
+  
+  // Booking info
+  bookingUrl    String
+  deepLink      String?
+  validUntil    DateTime?
+  
+  // Relations
+  savedBy       SavedFlight[]
+  bookings      Booking[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("flight_results")
+}
+
+model FlightLeg {
+  id            String @id @default(cuid())
+  
+  // Basic info
+  duration      Int    // in minutes
+  stops         Int    @default(0)
+  
+  // Departure/Arrival
+  departureAirport   Airport @relation("DepartureAirport", fields: [departureAirportId], references: [id])
+  departureAirportId String
+  departureTime      DateTime
+  departureTerminal  String?
+  
+  arrivalAirport     Airport @relation("ArrivalAirport", fields: [arrivalAirportId], references: [id])
+  arrivalAirportId   String
+  arrivalTime        DateTime
+  arrivalTerminal    String?
+  
+  // Airline info
+  airline       Airline @relation(fields: [airlineId], references: [id])
+  airlineId     String
+  flightNumber  String
+  aircraft      String?
+  
+  // Cabin and services
+  cabin         String  @default("economy")
+  baggage       Json?   // baggage allowances
+  amenities     String[] // wifi, meals, entertainment, etc.
+  
+  // Relations
+  outboundFor   FlightResult? @relation("OutboundFlight")
+  returnFor     FlightResult? @relation("ReturnFlight")
+  segments      FlightSegment[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("flight_legs")
+}
+
+model FlightSegment {
+  id            String @id @default(cuid())
+  legId         String
+  leg           FlightLeg @relation(fields: [legId], references: [id], onDelete: Cascade)
+  
+  // Segment details
+  segmentOrder  Int
+  flightNumber  String
+  aircraft      String?
+  duration      Int // in minutes
+  
+  // Departure
+  departureAirport String // IATA code
+  departureTime    DateTime
+  departureTerminal String?
+  
+  // Arrival
+  arrivalAirport   String // IATA code
+  arrivalTime      DateTime
+  arrivalTerminal  String?
+  
+  // Additional info
+  cabin            String
+  bookingClass     String?
+  fareClass        String?
+  
+  createdAt DateTime @default(now())
+  
+  @@map("flight_segments")
+}
+
+model PriceAlert {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Search criteria
+  origin          String
+  destination     String
+  departureDate   DateTime
+  returnDate      DateTime?
+  adults          Int      @default(1)
+  children        Int      @default(0)
+  infants         Int      @default(0)
+  cabin           String   @default("economy")
+  
+  // Alert settings
+  maxPrice        Float
+  isActive        Boolean  @default(true)
+  frequency       String   @default("daily") // daily, weekly
+  
+  // Tracking
+  currentPrice    Float?
+  lastChecked     DateTime?
+  triggeredAt     DateTime?
+  timesTriggered  Int      @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("price_alerts")
+}
+
+model SavedFlight {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flightId    String
+  flight      FlightResult @relation(fields: [flightId], references: [id], onDelete: Cascade)
+  
+  // User notes
+  notes       String?
+  tags        String[]
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, flightId])
+  @@map("saved_flights")
+}
+
+model Booking {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  flightId       String
+  flight         FlightResult @relation(fields: [flightId], references: [id])
+  
+  // Booking details
+  bookingReference String     @unique
+  status           String     @default("pending") // pending, confirmed, cancelled, completed
+  totalPrice       Float
+  currency         String     @default("USD")
+  
+  // Passenger details
+  passengers       Json       // Array of passenger objects
+  contactInfo      Json       // Email, phone, emergency contact
+  
+  // Payment
+  paymentMethod    String?
+  paymentStatus    String     @default("pending")
+  paymentReference String?
+  
+  // Booking metadata
+  bookedAt         DateTime   @default(now())
+  expiresAt        DateTime?
+  cancelledAt      DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("bookings")
+}
+
+model Review {
+  id          String @id @default(cuid())
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Review target
+  airline     String? // Airline IATA code
+  airport     String? // Airport IATA code
+  route       String? // "JFK-LAX"
+  
+  // Review content
+  rating      Int     // 1-5 stars
+  title       String?
+  content     String
+  
+  // Review metadata
+  verified    Boolean @default(false)
+  helpful     Int     @default(0)
+  reported    Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("reviews")
+}
+
+model PriceHistory {
+  id          String   @id @default(cuid())
+  
+  // Route info
+  origin      String
+  destination String
+  date        DateTime @db.Date
+  
+  // Price data
+  minPrice    Float
+  avgPrice    Float
+  maxPrice    Float
+  currency    String   @default("USD")
+  
+  // Metadata
+  sampleSize  Int      @default(1)
+  cabin       String   @default("economy")
+  
+  recordedAt  DateTime @default(now())
+  
+  @@unique([origin, destination, date, cabin])
+  @@map("price_history")
+}
+
+// Analytics and Insights
+model PopularRoute {
+  id            String @id @default(cuid())
+  origin        String
+  destination   String
+  
+  // Metrics
+  searchCount   Int    @default(0)
+  bookingCount  Int    @default(0)
+  avgPrice      Float?
+  popularity    Float  @default(0) // Calculated score
+  
+  // Time period
+  period        String @default("month") // day, week, month, year
+  periodStart   DateTime
+  periodEnd     DateTime
+  
+  updatedAt DateTime @updatedAt
+  
+  @@unique([origin, destination, period, periodStart])
+  @@map("popular_routes")
+}
+
+model TrendingDestination {
+  id              String @id @default(cuid())
+  
+  // Destination info
+  airportCode     String
+  city            String
+  country         String
+  
+  // Trending metrics
+  searchGrowth    Float  @default(0) // Percentage growth
+  priceChange     Float  @default(0) // Percentage change
+  popularityScore Float  @default(0)
+  
+  // Additional data
+  avgPrice        Float?
+  bestMonth       String?
+  description     String?
+  imageUrl        String?
+  
+  // Time period
+  period          String @default("month")
+  periodStart     DateTime
+  periodEnd       DateTime
+  
+  updatedAt DateTime @updatedAt
+  
+  @@unique([airportCode, period, periodStart])
+  @@map("trending_destinations")
+}

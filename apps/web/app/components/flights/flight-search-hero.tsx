@@ -21,7 +21,7 @@ export function FlightSearchHero({
   return (
     <section
       className={cn(
-        'relative pt-24 pb-16 px-4 bg-gradient-to-br from-sky-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800',
+        'relative pt-24 pb-16 px-4 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800',
         className
       )}
     >

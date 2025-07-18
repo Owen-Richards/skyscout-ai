@@ -1,53 +1,118 @@
-# SkyScout AI 🚀
+# SkyScout AI ✈️
 
-_A smart, AI-powered flight & trip discovery engine—your eyes on every sky._
+> A smart, AI-powered flight & trip discovery engine—your eyes on every sky.
 
-## 🤖 AI-Powered Development
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-13+-000000?style=flat&logo=next.js)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Rust](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 
-This repository is configured with AI-powered development workflows to accelerate feature development and maintain code quality. Our AI bots can:
+## 🚀 Quick Start
 
-- **Develop Features**: Create full features from issue descriptions
-- **Code Reviews**: Automated code quality and architecture compliance
-- **Maintenance**: Keep dependencies updated and code optimized
-- **Documentation**: Generate and maintain comprehensive docs
+### Prerequisites
 
-### 🎯 Quick AI Commands
+- **Docker & Docker Compose** (recommended)
+- **Node.js 18+** and **npm**
+- **Python 3.11+** (for ML service)
+- **Rust 1.75+** (for search engine)
 
-- **Request Feature Development**: Comment `/ai-develop <feature description>` on any issue
-- **Trigger Maintenance**: Run automated code maintenance workflows
-- **Get Code Review**: AI reviews all PRs automatically
+### 🐳 Docker Development (Recommended)
 
----
+Start the complete development environment with all services:
 
-## 🌟 Overview
+```bash
+# Windows
+npm run setup:dev:win
 
-SkyScout AI is a cutting-edge flight discovery platform that leverages artificial intelligence and machine learning to provide users with intelligent flight recommendations, price predictions, and personalized travel insights. Built with a modern microservices architecture and enterprise-grade technologies.
+# macOS/Linux
+npm run setup:dev
 
-## 🔧 Tech Stack
+# Or manually
+npm run dev:full
+```
 
-### Monorepo & Developer Experience
+This will start all services:
 
-- **Nx** - Monorepo orchestration with build optimization
-- **TypeScript** - End-to-end type safety
-- **ESLint + Prettier** - Code quality and formatting
-- **Husky** - Git hooks for quality gates
-- **AI Workflows** - Automated development and maintenance
+- **Frontend**: http://localhost:3000
+- **API Gateway**: http://localhost:3001
+- **ML Service**: http://localhost:8000
+- **Search Engine**: http://localhost:8080
+- **Monitoring**: http://localhost:3002 (Grafana)
 
-### Frontend
+### 🛠️ Local Development
 
-- **Next.js 14** - App router with server components
-- **React 18** - Modern React with concurrent features
-- **Tailwind CSS** - Utility-first styling
-- **Radix UI** - Accessible component primitives
-- **tRPC** - Type-safe RPC between client and server
-- **TanStack Query** - Data fetching and caching
-- **Recharts** - Interactive price charts
-- **Mapbox GL JS** - Interactive maps and heatmaps
+For individual service development:
 
-### Backend Microservices
+```bash
+# Install dependencies
+npm install
 
-- **Auth Service** - NestJS + Passport.js + Auth0
-- **Search Engine** - Rust (Actix-web) + Go (gRPC)
+# Start shared libraries
+npm run dev:libs
+
+# Start frontend only
+npm run dev:web
+
+# Start API only
+npm run dev:api
+
+# Start ML service
+npm run dev:ml
+
+# Start search engine
+npm run dev:search
+```
+
+## 🏗️ Architecture
+
+### Frontend Stack
+
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **tRPC** for type-safe API calls
+- **Framer Motion** for animations
+
+### Backend Services
+
+#### API Gateway (`apps/api`)
+
+- **Node.js** with **Fastify**
+- **tRPC** for type-safe APIs
+- **Prisma** ORM with PostgreSQL
+- **Redis** for caching
+- **JWT** authentication
+
+#### ML Service (`apps/ml-service`)
+
+- **Python** with **FastAPI**
+- **scikit-learn** for machine learning
+- **Pandas & NumPy** for data processing
+- Price prediction & demand forecasting
+
+#### Search Engine (`apps/search-engine`)
+
+- **Rust** with **Axum** web framework
+- High-performance flight search
+- **Elasticsearch** integration
+- Geospatial queries
+
+#### Authentication Service (`apps/auth-service`)
+
+- **Node.js** microservice
+- **JWT** & **bcrypt** for security
+- **Redis** session management
+- Rate limiting & security headers
+
+### Infrastructure
+
+- **PostgreSQL** with **TimescaleDB** for time-series data
+- **Redis** for caching and sessions
+- **OpenSearch** for full-text search
+- **Prometheus** & **Grafana** for monitoring
+- **Docker** containerization
+- **Nginx** reverse proxy
 - **Alert Service** - Node.js (NestJS + BullMQ)
 - **ML Service** - Python (FastAPI + PyTorch/TensorFlow)
 

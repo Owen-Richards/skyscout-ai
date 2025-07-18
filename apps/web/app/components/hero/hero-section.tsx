@@ -92,10 +92,8 @@ function HeroContent({ className }: { readonly className?: string }) {
           variant="sky-primary"
           className="relative overflow-hidden shadow-lg w-full sm:w-auto transition-all duration-200 group"
           onClick={() => {
-            const searchForm = document.querySelector('#search-form');
-            if (searchForm) {
-              searchForm.scrollIntoView({ behavior: 'smooth' });
-            }
+            // Navigate to flights page
+            window.location.href = '/flights';
           }}
         >
           <Plane className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />

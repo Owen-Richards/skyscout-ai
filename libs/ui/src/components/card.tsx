@@ -279,6 +279,3 @@ export {
   DealCard,
   cardVariants,
 };
-
-// AI-generated TypeScript exports for better intellisense
-export type { CardProps };

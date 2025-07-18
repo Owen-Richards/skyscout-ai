@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Button } from '@skyscout/ui';
 import { Plane, Calendar, Users } from 'lucide-react';
@@ -12,7 +13,7 @@ import { z } from 'zod';
  * - Date picker integration
  * - Passenger count selector
  * - Integration with main search form
- *
+ *`
  * Uses FlightSearchSchema for validation and Button component for consistency
  */
 
