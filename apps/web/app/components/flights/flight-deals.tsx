@@ -128,15 +128,15 @@ export function FlightDeals({ className }: { className?: string }) {
   const getDealTypeColor = (dealType: FlightDeal['dealType']) => {
     switch (dealType) {
       case 'flash':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30';
       case 'error-fare':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+        return 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30';
       case 'limited-time':
-        return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+        return 'bg-orange-500/20 text-orange-600 dark:text-orange-400 border-orange-500/30';
       case 'seasonal':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+        return 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -178,11 +178,11 @@ export function FlightDeals({ className }: { className?: string }) {
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             🔥 Trending Flight Deals
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Hand-picked deals that won't last long
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Users className="w-4 h-4" />
           <span>
             {deals.reduce((sum, deal) => sum + deal.bookingsToday, 0)} booked
@@ -197,7 +197,7 @@ export function FlightDeals({ className }: { className?: string }) {
           <Card
             key={deal.id}
             className={cn(
-              'group relative overflow-hidden bg-gray-800/50 border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20',
+              'group relative overflow-hidden bg-card border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20',
               deal.dealType === 'flash' &&
                 'ring-1 ring-red-500/30 animate-pulse'
             )}
@@ -222,24 +222,26 @@ export function FlightDeals({ className }: { className?: string }) {
                   {getDealTypeIcon(deal.dealType)}
                   <span className="ml-1">{formatDealType(deal.dealType)}</span>
                 </Badge>
-                <div className="text-xs text-gray-400">{deal.airline}</div>
+                <div className="text-xs text-muted-foreground">
+                  {deal.airline}
+                </div>
               </div>
 
               {/* Route */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-lg font-semibold text-white">
+                  <div className="text-lg font-semibold text-foreground">
                     {deal.origin}
                   </div>
-                  <div className="flex items-center text-gray-400">
+                  <div className="flex items-center text-muted-foreground">
                     <Plane className="w-4 h-4 mx-2" />
                   </div>
-                  <div className="text-lg font-semibold text-white">
+                  <div className="text-lg font-semibold text-foreground">
                     {deal.destination}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-gray-400">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
                     {deal.stops === 0
                       ? 'Nonstop'
@@ -252,24 +254,24 @@ export function FlightDeals({ className }: { className?: string }) {
               {/* Price */}
               <div className="space-y-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-green-400">
+                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">
                     ${deal.price}
                   </span>
-                  <span className="text-sm text-gray-400 line-through">
+                  <span className="text-sm text-muted-foreground line-through">
                     ${deal.originalPrice}
                   </span>
-                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                  <Badge className="bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30">
                     <TrendingDown className="w-3 h-3 mr-1" />
                     {deal.savingsPercent}% off
                   </Badge>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                   Save ${deal.savings} per person
                 </p>
               </div>
 
               {/* Travel Dates */}
-              <div className="flex items-center gap-2 text-xs text-gray-400">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="w-3 h-3" />
                 <span>
                   {new Date(deal.departureDate).toLocaleDateString('en-US', {
@@ -288,7 +290,7 @@ export function FlightDeals({ className }: { className?: string }) {
               </div>
 
               {/* Social Proof */}
-              <div className="flex items-center justify-between text-xs text-gray-400">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Users className="w-3 h-3" />
                   <span>{deal.bookingsToday} booked today</span>
@@ -302,11 +304,11 @@ export function FlightDeals({ className }: { className?: string }) {
               {/* Urgency Timer */}
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2">
                 <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1 text-red-400">
+                  <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
                     <Clock className="w-3 h-3" />
                     <span>Deal expires</span>
                   </div>
-                  <span className="text-red-400 font-semibold">
+                  <span className="text-red-600 dark:text-red-400 font-semibold">
                     {new Date(deal.validUntil).toLocaleDateString()}
                   </span>
                 </div>
@@ -323,9 +325,9 @@ export function FlightDeals({ className }: { className?: string }) {
                   size="sm"
                   onClick={() => toggleWishlist(deal.id)}
                   className={cn(
-                    'border-gray-600 hover:border-gray-500',
+                    'border-border hover:border-border/80',
                     (wishlistedDeals.has(deal.id) || deal.isWishlisted) &&
-                      'border-red-500 text-red-400'
+                      'border-red-500 text-red-500'
                   )}
                 >
                   {wishlistedDeals.has(deal.id) || deal.isWishlisted ? (
@@ -345,11 +347,11 @@ export function FlightDeals({ className }: { className?: string }) {
         <div className="p-4">
           <div className="flex items-start gap-3">
             <div className="bg-blue-500/20 p-2 rounded-lg">
-              <Bookmark className="w-5 h-5 text-blue-400" />
+              <Bookmark className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-white mb-1">💡 Pro Tip</h3>
-              <p className="text-sm text-gray-300">
+              <h3 className="font-semibold text-foreground mb-1">💡 Pro Tip</h3>
+              <p className="text-sm text-muted-foreground">
                 Add deals to your wishlist to get instant notifications when
                 prices drop even further! Our AI tracks price patterns and
                 alerts you to the perfect booking moment.

@@ -21,6 +21,7 @@ import {
 import { ChevronDown, LogOut, Star } from 'lucide-react';
 import { USER_MENU_ITEMS } from '../../constants/navigation';
 import { useAppTranslation } from '../../contexts/translation-context';
+import { AuthModal, useAuthModal } from '../auth/auth-modal';
 import type { UserProfile } from '../../types/navigation';
 
 interface UserMenuProps {
@@ -29,6 +30,7 @@ interface UserMenuProps {
 
 export function UserMenu({ className }: UserMenuProps) {
   const { tUser } = useAppTranslation();
+  const { isOpen, mode, openSignIn, openSignUp, close } = useAuthModal();
   // Mock user state - in real app this would come from auth context
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user] = useState<UserProfile>({
@@ -40,21 +42,24 @@ export function UserMenu({ className }: UserMenuProps) {
 
   if (!isLoggedIn) {
     return (
-      <div className={`flex items-center space-x-2 ${className}`}>
-        <Link
-          href="/login"
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {tUser('sign in')}
-        </Link>
-        <Button
-          asChild
-          variant="sky-primary"
-          className="relative overflow-hidden"
-        >
-          <Link href="/signup">Get Started</Link>
-        </Button>
-      </div>
+      <>
+        <div className={`flex items-center space-x-2 ${className}`}>
+          <button
+            onClick={openSignIn}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {tUser('sign in')}
+          </button>
+          <Button
+            variant="sky-primary"
+            className="relative overflow-hidden"
+            onClick={openSignUp}
+          >
+            Get Started
+          </Button>
+        </div>
+        <AuthModal isOpen={isOpen} onClose={close} initialMode={mode} />
+      </>
     );
   }
 

@@ -5,9 +5,9 @@
 
 'use client';
 
-import { FlightSearchForm } from './flight-search-form';
-import { cn } from '@skyscout/ui';
 import type { FlightSearch } from '@skyscout/shared';
+import { cn } from '@skyscout/ui';
+import { FlightSearchForm } from './flight-search-form';
 
 interface FlightSearchHeroProps {
   onSearch: (searchData: FlightSearch) => void;
@@ -28,7 +28,7 @@ export function FlightSearchHero({
       <div className="container mx-auto max-w-7xl">
         {/* Attention-grabbing header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent pb-3">
             Find Your Perfect Flight
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
