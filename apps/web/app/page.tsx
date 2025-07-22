@@ -12,6 +12,7 @@ import {
   FeatureShowcase,
 } from './components';
 import { Navigation } from './components/layout/navigation';
+import { HotelsSection } from './components/hotels';
 import type { FlightDeal } from './types';
 import type { SearchResult } from './services';
 
@@ -122,6 +123,13 @@ export default function HomePage() {
               onBookingClick={handleBookingClick}
               loading={false}
             />
+          </div>
+        </section>
+
+        {/* Hotels Section */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50/50 to-blue-50/50 dark:from-green-950/10 dark:to-blue-950/10">
+          <div className="container mx-auto max-w-7xl">
+            <HotelsSection />
           </div>
         </section>
 

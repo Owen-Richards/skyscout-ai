@@ -5,22 +5,21 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  TrendingUp,
-  MapPin,
-  Star,
   ArrowRight,
-  Plane,
-  Users,
-  Heart,
   Camera,
-  Thermometer,
   Clock,
   Flame,
+  Heart,
+  MapPin,
+  Plane,
+  Star,
+  Thermometer,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 
 interface TrendingDestination {
   id: string;
@@ -243,13 +242,13 @@ export function TrendingDestinations({ className }: { className?: string }) {
   ) => {
     switch (seasonality) {
       case 'peak':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30';
       case 'shoulder':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+        return 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30';
       case 'off-peak':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
+        return 'bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -267,11 +266,11 @@ export function TrendingDestinations({ className }: { className?: string }) {
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             🌍 Trending Destinations
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Discover where the world is traveling this season
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <TrendingUp className="w-4 h-4" />
           <span>Updated hourly</span>
         </div>
@@ -286,7 +285,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
         </div>
         <div className="absolute top-4 right-4 z-10">
           {destinations[0]?.dealBadge && (
-            <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
+            <Badge className="bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30">
               <Flame className="w-3 h-3 mr-1" />
               {destinations[0].dealBadge}
             </Badge>
@@ -300,10 +299,10 @@ export function TrendingDestinations({ className }: { className?: string }) {
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl">{destinations[0]?.image}</span>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="text-2xl font-bold text-foreground">
                       {destinations[0]?.city}, {destinations[0]?.country}
                     </h3>
-                    <p className="text-gray-300 flex items-center gap-2">
+                    <p className="text-muted-foreground flex items-center gap-2">
                       <span>
                         {destinations[0]?.weather.icon}{' '}
                         {destinations[0]?.weather.current}°C
@@ -313,49 +312,57 @@ export function TrendingDestinations({ className }: { className?: string }) {
                     </p>
                   </div>
                 </div>
-                <p className="text-gray-300">{destinations[0]?.description}</p>
+                <p className="text-muted-foreground">
+                  {destinations[0]?.description}
+                </p>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                     ${destinations[0]?.price}
                   </div>
-                  <div className="text-xs text-gray-400">avg. price</div>
+                  <div className="text-xs text-muted-foreground">
+                    avg. price
+                  </div>
                   {destinations[0]?.priceChange &&
                     destinations[0].priceChange < 0 && (
-                      <div className="text-xs text-green-400 flex items-center justify-center">
+                      <div className="text-xs text-green-600 dark:text-green-400 flex items-center justify-center">
                         ↘ {Math.abs(destinations[0].priceChangePercent)}% off
                       </div>
                     )}
                 </div>
                 <div className="text-center">
-                  <div className="flex items-center justify-center text-blue-400">
+                  <div className="flex items-center justify-center text-blue-600 dark:text-blue-400">
                     <TrendingUp className="w-4 h-4 mr-1" />
                     <span className="font-semibold">
                       +{destinations[0]?.searchGrowth}%
                     </span>
                   </div>
-                  <div className="text-xs text-gray-400">search growth</div>
+                  <div className="text-xs text-muted-foreground">
+                    search growth
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-white font-semibold">
+                  <div className="text-foreground font-semibold">
                     {destinations[0]?.searchesThisWeek.toLocaleString()}
                   </div>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-muted-foreground">
                     searches this week
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <div className="text-sm text-gray-300">Top activities:</div>
+                <div className="text-sm text-muted-foreground">
+                  Top activities:
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {destinations[0]?.topActivities.map((activity, idx) => (
                     <Badge
                       key={idx}
                       variant="outline"
-                      className="border-gray-600 text-gray-300"
+                      className="border-border text-muted-foreground"
                     >
                       {activity}
                     </Badge>
@@ -373,7 +380,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
                   onClick={() =>
                     destinations[0] && toggleWishlist(destinations[0].id)
                   }
-                  className="border-gray-600 hover:border-gray-500"
+                  className="border-border hover:border-border/80"
                 >
                   <Heart
                     className={cn(
@@ -389,10 +396,10 @@ export function TrendingDestinations({ className }: { className?: string }) {
             </div>
 
             <div className="relative">
-              <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-gray-700">
-                <Camera className="w-12 h-12 text-gray-400" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-lg" />
-                <div className="absolute bottom-4 left-4 text-white font-semibold">
+              <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-border">
+                <Camera className="w-12 h-12 text-muted-foreground" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent rounded-lg" />
+                <div className="absolute bottom-4 left-4 text-foreground font-semibold">
                   {destinations[0]?.city}
                 </div>
               </div>
@@ -406,7 +413,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
         {destinations.slice(1).map(destination => (
           <Card
             key={destination.id}
-            className="group relative overflow-hidden bg-gray-800/50 border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
+            className="group relative overflow-hidden bg-card border-border hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
           >
             {/* Trending Rank Badge */}
             <div className="absolute top-3 left-3 z-10">
@@ -431,10 +438,10 @@ export function TrendingDestinations({ className }: { className?: string }) {
 
             <div className="p-4 space-y-4">
               {/* Image Placeholder with City Icon */}
-              <div className="aspect-video bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center border border-gray-600 relative overflow-hidden">
-                <span className="text-4xl opacity-20">{destination.image}</span>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-2 left-2 text-white font-semibold text-sm">
+              <div className="aspect-video bg-gradient-to-br from-muted/50 to-muted rounded-lg flex items-center justify-center border border-border relative overflow-hidden">
+                <span className="text-4xl opacity-30">{destination.image}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                <div className="absolute bottom-2 left-2 text-foreground font-semibold text-sm">
                   {destination.city}
                 </div>
               </div>
@@ -443,10 +450,10 @@ export function TrendingDestinations({ className }: { className?: string }) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {destination.city}
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="w-3 h-3" />
                       <span>{destination.country}</span>
                     </div>
@@ -462,14 +469,14 @@ export function TrendingDestinations({ className }: { className?: string }) {
                         'w-4 h-4',
                         wishlistedDestinations.has(destination.id) ||
                           destination.isWishlisted
-                          ? 'fill-red-400 text-red-400'
-                          : 'text-gray-400 hover:text-red-400'
+                          ? 'fill-red-500 text-red-500'
+                          : 'text-muted-foreground hover:text-red-500'
                       )}
                     />
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Thermometer className="w-3 h-3" />
                   <span>
                     {destination.weather.icon} {destination.weather.current}°C
@@ -483,7 +490,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
               {/* Price */}
               <div className="space-y-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-xl font-bold text-white">
+                  <span className="text-xl font-bold text-foreground">
                     ${destination.price}
                   </span>
                   {destination.priceChange !== 0 && (
@@ -491,8 +498,8 @@ export function TrendingDestinations({ className }: { className?: string }) {
                       className={cn(
                         'text-xs flex items-center',
                         destination.priceChange > 0
-                          ? 'text-red-400'
-                          : 'text-green-400'
+                          ? 'text-red-500'
+                          : 'text-green-600 dark:text-green-400'
                       )}
                     >
                       {destination.priceChange > 0 ? '↗' : '↘'}
@@ -502,7 +509,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
                     </div>
                   )}
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                   Round trip from US • {destination.code}
                 </p>
               </div>
@@ -510,8 +517,8 @@ export function TrendingDestinations({ className }: { className?: string }) {
               {/* Popularity & Season */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-xs">
-                  <Users className="w-3 h-3 text-gray-400" />
-                  <span className="text-gray-400">
+                  <Users className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-muted-foreground">
                     +{destination.searchGrowth}% popularity
                   </span>
                 </div>
@@ -526,13 +533,13 @@ export function TrendingDestinations({ className }: { className?: string }) {
               </div>
 
               {/* Description */}
-              <p className="text-xs text-gray-400 line-clamp-2">
+              <p className="text-xs text-muted-foreground line-clamp-2">
                 {destination.description}
               </p>
 
               {/* Popular Months */}
               <div className="space-y-2">
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-muted-foreground">
                   Best months to visit:
                 </div>
                 <div className="flex flex-wrap gap-1">
@@ -540,13 +547,13 @@ export function TrendingDestinations({ className }: { className?: string }) {
                     <Badge
                       key={idx}
                       variant="outline"
-                      className="border-gray-600 text-gray-300 text-xs px-1 py-0"
+                      className="border-border text-muted-foreground text-xs px-1 py-0"
                     >
                       {month}
                     </Badge>
                   ))}
                   {destination.popularMonths.length > 3 && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       +{destination.popularMonths.length - 3} more
                     </span>
                   )}
@@ -571,11 +578,13 @@ export function TrendingDestinations({ className }: { className?: string }) {
         <div className="p-4">
           <div className="flex items-start gap-3">
             <div className="bg-purple-500/20 p-2 rounded-lg">
-              <Star className="w-5 h-5 text-purple-400" />
+              <Star className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-white mb-1">💡 Travel Smart</h3>
-              <p className="text-sm text-gray-300">
+              <h3 className="font-semibold text-foreground mb-1">
+                💡 Travel Smart
+              </h3>
+              <p className="text-sm text-muted-foreground">
                 Save destinations to your wishlist to track price drops and get
                 notified about special deals. Our AI analyzes trends to help you
                 book at the perfect moment.
@@ -589,7 +598,7 @@ export function TrendingDestinations({ className }: { className?: string }) {
       <div className="text-center">
         <Button
           variant="outline"
-          className="border-gray-600 hover:border-gray-500"
+          className="border-border hover:border-border/80"
         >
           View All Destinations
           <ArrowRight className="w-4 h-4 ml-2" />

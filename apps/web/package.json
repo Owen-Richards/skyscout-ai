@@ -5,9 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true npm run build",
+    "analyze:server": "BUNDLE_ANALYZE=server npm run build",
+    "analyze:browser": "BUNDLE_ANALYZE=browser npm run build",
+    "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output=html --output-path=./reports/lighthouse",
+    "perf:speed-measure": "npx speed-measure-webpack-plugin",
+    "bundle:stats": "npx webpack-bundle-analyzer .next/analyze/client.json"
   },
   "dependencies": {
     "next": "^14.0.4",
