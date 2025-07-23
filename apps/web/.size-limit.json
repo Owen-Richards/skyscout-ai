@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Main Bundle",
+    "path": "apps/web/.next/static/chunks/pages/_app-*.js",
+    "limit": "250 KB",
+    "webpack": false,
+    "gzip": true
+  },
+  {
+    "name": "Home Page",
+    "path": "apps/web/.next/static/chunks/pages/index-*.js",
+    "limit": "50 KB",
+    "webpack": false,
+    "gzip": true
+  },
+  {
+    "name": "Vendors Bundle",
+    "path": "apps/web/.next/static/chunks/vendors-*.js",
+    "limit": "200 KB",
+    "webpack": false,
+    "gzip": true
+  },
+  {
+    "name": "UI Library Bundle",
+    "path": "apps/web/.next/static/chunks/ui-lib-*.js",
+    "limit": "100 KB",
+    "webpack": false,
+    "gzip": true
+  },
+  {
+    "name": "Shared Library Bundle",
+    "path": "apps/web/.next/static/chunks/shared-lib-*.js",
+    "limit": "50 KB",
+    "webpack": false,
+    "gzip": true
+  }
+]

@@ -5,9 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import {
+  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +15,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Badge,
 } from '@skyscout/ui';
 import { ChevronDown, LogOut, Star } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 import { USER_MENU_ITEMS } from '../../constants/navigation';
 import { useAppTranslation } from '../../contexts/translation-context';
-import { AuthModal, useAuthModal } from '../auth/auth-modal';
 import type { UserProfile } from '../../types/navigation';
+import { AuthModal, useAuthModal } from '../auth/auth-modal';
 
 interface UserMenuProps {
   readonly className?: string;

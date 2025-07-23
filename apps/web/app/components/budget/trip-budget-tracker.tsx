@@ -6,24 +6,23 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  TrendingUp,
-  TrendingDown,
-  PiggyBank,
   AlertTriangle,
+  BarChart3,
   Calendar,
-  MapPin,
-  Plus,
   CheckCircle,
-  Wallet,
+  MapPin,
+  PieChart,
+  PiggyBank,
+  Plus,
   Receipt,
   Sparkles,
-  BarChart3,
-  PieChart,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 import type { TripBudget } from '../../types/budget';
 
 export function TripBudgetTracker({ className }: { className?: string }) {

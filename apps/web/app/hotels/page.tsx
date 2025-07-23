@@ -6,8 +6,8 @@
 
 'use client';
 
-import { Navigation } from '../components/layout/navigation';
 import { HotelsSection } from '../components/hotels';
+import { Navigation } from '../components/layout/navigation';
 
 export default function HotelsPage() {
   return (

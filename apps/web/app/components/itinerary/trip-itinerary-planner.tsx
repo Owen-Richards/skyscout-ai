@@ -6,39 +6,38 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  MapPin,
-  Clock,
   Calendar,
-  Users,
-  Star,
-  Heart,
-  Navigation,
   Camera,
-  Utensils,
   Car,
-  Train,
-  Plane,
-  Walking,
-  Sun,
+  CheckCircle,
+  Clock,
   Cloud,
   CloudRain,
-  Thermometer,
-  Plus,
-  Edit,
-  Share,
   Download,
-  Sparkles,
-  Target,
-  CheckCircle,
-  TrendingUp,
-  Route,
+  Edit,
   Flag,
+  Footprints,
+  Heart,
+  MapPin,
+  Navigation,
+  Plane,
+  Plus,
+  Route,
+  Share,
+  Sparkles,
+  Star,
+  Sun,
+  Target,
+  Thermometer,
+  Train,
+  TrendingUp,
+  Users,
+  Utensils,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
-import type { TripItinerary, ItineraryDay } from '../../types/itinerary';
+import { useState } from 'react';
+import type { ItineraryDay, TripItinerary } from '../../types/itinerary';
 
 export function TripItineraryPlanner({ className }: { className?: string }) {
   const [itineraries] = useState<TripItinerary[]>([
@@ -323,7 +322,7 @@ export function TripItineraryPlanner({ className }: { className?: string }) {
   const getTransportIcon = (method: string) => {
     switch (method) {
       case 'walking':
-        return <Walking className="w-4 h-4" />;
+        return <Footprints className="w-4 h-4" />;
       case 'car':
         return <Car className="w-4 h-4" />;
       case 'train':

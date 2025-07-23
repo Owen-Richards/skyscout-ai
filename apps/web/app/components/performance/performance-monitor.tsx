@@ -5,22 +5,21 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Card, Badge } from '@skyscout/ui';
+import { Badge, Card, cn } from '@skyscout/ui';
 import {
   Activity,
-  Zap,
-  Gauge,
-  TrendingUp,
-  TrendingDown,
   AlertTriangle,
   CheckCircle,
   Clock,
-  Wifi,
+  Gauge,
   HardDrive,
   Monitor,
+  TrendingDown,
+  TrendingUp,
+  Wifi,
+  Zap,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useEffect, useState } from 'react';
 
 interface PerformanceMetrics {
   bundleSize: {

@@ -5,24 +5,23 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  Zap,
-  Clock,
-  Users,
-  Plane,
-  Heart,
   ArrowRight,
-  Star,
-  TrendingDown,
-  Calendar,
-  Flame,
-  Timer,
-  Trophy,
   Bookmark,
+  Calendar,
+  Clock,
+  Flame,
+  Heart,
+  Plane,
+  Star,
+  Timer,
+  TrendingDown,
+  Trophy,
+  Users,
+  Zap,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 
 interface FlightDeal {
   id: string;

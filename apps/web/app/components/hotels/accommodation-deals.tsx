@@ -6,26 +6,25 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  MapPin,
-  Star,
-  Heart,
   ArrowRight,
-  Users,
-  Bed,
   Bath,
-  Home,
-  Zap,
+  Bed,
   Clock,
-  TrendingDown,
-  Sparkles,
-  Target,
-  Trophy,
+  Heart,
+  Home,
+  MapPin,
   Shield,
+  Sparkles,
+  Star,
+  Target,
+  TrendingDown,
+  Trophy,
+  Users,
+  Zap,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 import type { AccommodationDeal } from '../../types/hotels';
 
 export function AccommodationDeals({ className }: { className?: string }) {
