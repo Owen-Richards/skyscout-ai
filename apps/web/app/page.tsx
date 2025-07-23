@@ -6,15 +6,15 @@
 'use client';
 
 import {
-  HeroSection,
   AdvancedSearchForm,
   DealsList,
   FeatureShowcase,
+  HeroSection,
 } from './components';
-import { Navigation } from './components/layout/navigation';
 import { HotelsSection } from './components/hotels';
-import type { FlightDeal } from './types';
+import { Navigation } from './components/layout/navigation';
 import type { SearchResult } from './services';
+import type { FlightDeal } from './types';
 
 // Mock data for demonstration
 const mockDeals: FlightDeal[] = [

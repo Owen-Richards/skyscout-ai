@@ -10,11 +10,11 @@
  * - Dependencies: Uses i18n context and translation hooks
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { Settings, Check, Globe, DollarSign, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, DollarSign, Globe, Settings } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../contexts/i18n-context';
 import { useTranslation } from '../../hooks/use-translation';
-import { SUPPORTED_LOCALES, SUPPORTED_CURRENCIES } from '../../types/i18n';
+import { SUPPORTED_CURRENCIES, SUPPORTED_LOCALES } from '../../types/i18n';
 
 interface SettingsMenuProps {
   className?: string;

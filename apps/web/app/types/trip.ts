@@ -478,7 +478,7 @@ export interface TripRecommendation {
   category: string;
 
   // Recommendation Data
-  data: any; // Flexible data structure based on type
+  data: Record<string, unknown>; // Flexible data structure based on type
 
   // Cost Impact
   costImpact?: {
@@ -750,7 +750,7 @@ export interface TripActivity {
   userId: string;
   action: string;
   target: string;
-  details: any;
+  details: Record<string, unknown>;
   timestamp: string;
 }
 
@@ -775,29 +775,28 @@ export interface TripVote {
 
 // Export all types
 export type {
-  Trip,
-  TripDestination,
-  TripTraveler,
-  TravelerPreferences,
-  TripBudget,
-  BudgetCategory,
-  BudgetSubcategory,
+  BookingDocument,
   BudgetAlert,
-  TripExpense,
+  BudgetCategory,
   ExpenseSplit,
-  TripItinerary,
   ItineraryDay,
   ItineraryItem,
-  TripBooking,
-  BookingDocument,
-  TripRecommendation,
-  TripPreferences,
+  TravelerPreferences,
+  Trip,
+  TripActivity,
   TripAnalytics,
-  TripTemplate,
+  TripBooking,
+  TripBudget,
   TripCollaboration,
   TripCollaborator,
-  TripPermissions,
-  TripActivity,
   TripComment,
+  TripDestination,
+  TripExpense,
+  TripItinerary,
+  TripPermissions,
+  TripPreferences,
+  TripRecommendation,
+  TripTemplate,
+  TripTraveler,
   TripVote,
 };

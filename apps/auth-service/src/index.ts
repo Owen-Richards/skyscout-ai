@@ -1,12 +1,24 @@
-import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
-import rateLimit from '@fastify/rate-limit';
 import jwt from '@fastify/jwt';
-import bcrypt from '@fastify/bcrypt';
+import rateLimit from '@fastify/rate-limit';
 import redis from '@fastify/redis';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import Fastify from 'fastify';
 import { z } from 'zod';
+
+// Type definitions
+interface JWTPayload {
+  userId: string;
+}
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    payload: JWTPayload;
+    user: JWTPayload;
+  }
+}
 
 const fastify = Fastify({
   logger: {
@@ -48,10 +60,6 @@ async function registerPlugins() {
     secret: process.env.JWT_SECRET || 'your-secret-key',
   });
 
-  await fastify.register(bcrypt, {
-    saltWorkFactor: 12,
-  });
-
   await fastify.register(redis, {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -80,7 +88,7 @@ async function registerRoutes() {
       }
 
       // Hash password
-      const hashedPassword = await fastify.bcrypt.hash(password);
+      const hashedPassword = await bcrypt.hash(password, 12);
 
       // Create user
       const user = await prisma.user.create({
@@ -122,7 +130,7 @@ async function registerRoutes() {
       }
 
       // Verify password
-      const isValid = await fastify.bcrypt.compare(password, user.password);
+      const isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) {
         return reply.code(401).send({ error: 'Invalid credentials' });
@@ -160,7 +168,7 @@ async function registerRoutes() {
   fastify.get('/verify', async (request, reply) => {
     try {
       await request.jwtVerify();
-      const userId = (request.user as any).userId;
+      const userId = (request.user as JWTPayload).userId;
 
       // Check cached session
       const cachedSession = await fastify.redis.get(`session:${userId}`);
@@ -193,7 +201,7 @@ async function registerRoutes() {
   fastify.post('/logout', async (request, reply) => {
     try {
       await request.jwtVerify();
-      const userId = (request.user as any).userId;
+      const userId = (request.user as JWTPayload).userId;
 
       // Remove cached session
       await fastify.redis.del(`session:${userId}`);

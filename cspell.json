@@ -1,0 +1,90 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "MAPBOX",
+    "skyscout",
+    "nosniff",
+    "avif",
+    "webp",
+    "swcMinify",
+    "poweredByHeader",
+    "transpilePackages",
+    "turbo",
+    "svgr",
+    "webpack",
+    "splitChunks",
+    "cacheGroups",
+    "reuseExistingChunk",
+    "concatenateModules",
+    "usedExports",
+    "sideEffects",
+    "devtool",
+    "minimumCacheTTL",
+    "deviceSizes",
+    "imageSizes",
+    "stale",
+    "revalidate",
+    "immutable",
+    "bullmq",
+    "kafkajs",
+    "setex",
+    "ryokan",
+    "Shibuya",
+    "shibuya",
+    "Narita",
+    "narita",
+    "Hachiko",
+    "tonkotsu",
+    "Ippudo",
+    "Quijote",
+    "chashu",
+    "gyoza",
+    "Tsukiji",
+    "shadcn",
+    "cicd",
+    "Contentful",
+    "uvicorn"
+  ],
+  "ignoreWords": [],
+  "import": [],
+  "flagWords": [],
+  "allowCompoundWords": true,
+  "ignorePaths": [
+    "node_modules/**",
+    ".next/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "*.min.js",
+    "*.map"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.{ts,tsx,js,jsx}",
+      "languageSettings": [
+        {
+          "languageId": "typescript",
+          "allowCompoundWords": true
+        },
+        {
+          "languageId": "javascript",
+          "allowCompoundWords": true
+        }
+      ]
+    },
+    {
+      "filename": "**/package.json",
+      "words": [
+        "skyscout",
+        "trpc",
+        "nestjs",
+        "prisma",
+        "tailwindcss",
+        "lucide",
+        "radix",
+        "shadcn"
+      ]
+    }
+  ]
+}

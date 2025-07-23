@@ -6,24 +6,23 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  MapPin,
-  Star,
-  TrendingUp,
-  Calendar,
   ArrowRight,
-  Sparkles,
-  Target,
+  Building,
+  Calendar,
   Heart,
   Home,
-  Building,
-  TreePine,
+  MapPin,
   Plane,
   Shield,
+  Sparkles,
+  Star,
+  Target,
+  TreePine,
+  TrendingUp,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 
 interface TrendingDestination {
   id: string;

@@ -6,8 +6,8 @@
 
 'use client';
 
-import { AccommodationSearchForm } from './accommodation-search-form';
 import { AccommodationDeals } from './accommodation-deals';
+import { AccommodationSearchForm } from './accommodation-search-form';
 import { HotelTrendingDestinations } from './hotel-trending-destinations';
 import { ProviderComparison } from './provider-comparison';
 

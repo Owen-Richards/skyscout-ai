@@ -10,20 +10,20 @@
  * - Dependencies: Uses react-hook-form, zod validation, and auth context
  */
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { cn } from '@skyscout/ui';
 import {
+  ArrowRight,
   Eye,
   EyeOff,
-  Mail,
-  Lock,
-  User,
-  ArrowRight,
   Loader2,
+  Lock,
+  Mail,
+  User,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 // Validation schemas
 const signInSchema = z.object({

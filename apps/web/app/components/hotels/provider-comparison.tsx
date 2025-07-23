@@ -6,18 +6,17 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  TrendingDown,
-  Star,
-  Shield,
-  XCircle,
   Crown,
-  Target,
+  Shield,
   Sparkles,
+  Star,
+  Target,
+  TrendingDown,
+  XCircle,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 
 interface ProviderComparison {
   id: string;

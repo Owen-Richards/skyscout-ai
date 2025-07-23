@@ -6,26 +6,25 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Badge } from '@skyscout/ui';
+import { Badge, Button, Card, cn } from '@skyscout/ui';
 import {
-  Search,
-  MapPin,
-  Calendar,
-  Users,
-  Home,
-  Building,
-  TreePine,
-  Filter,
-  Sparkles,
   ArrowRight,
+  Building,
+  Calendar,
+  Filter,
   Globe,
-  Star,
   Heart,
-  Zap,
+  Home,
+  MapPin,
+  Search,
+  Sparkles,
+  Star,
   Target,
+  TreePine,
+  Users,
+  Zap,
 } from 'lucide-react';
-import { cn } from '@skyscout/ui';
+import { useState } from 'react';
 
 interface SearchFormData {
   destination: string;
