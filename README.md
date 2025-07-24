@@ -1,12 +1,20 @@
 # SkyScout AI ✈️
 
-> A smart, AI-powered flight & trip discovery engine—your eyes on every sky.
+> A comprehensive AI-powered travel platform—flight discovery, trip planning, and budget management all in one place.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-13+-000000?style=flat&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14+-000000?style=flat&logo=next.js)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Rust](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+
+## ✨ New Features
+
+🎯 **Trip Management System** - Complete itinerary planning with collaborative features  
+💰 **Budget Tracking** - Real-time expense monitoring and budget management  
+📊 **Performance Monitoring** - Bundle analysis and Lighthouse integration  
+🏨 **Hotel Integration** - Enhanced accommodation search and deals  
+🔐 **Enhanced Authentication** - Redis-powered session management
 
 ## 🚀 Quick Start
 
@@ -34,11 +42,12 @@ npm run dev:full
 
 This will start all services:
 
-- **Frontend**: http://localhost:3000
-- **API Gateway**: http://localhost:3001
-- **ML Service**: http://localhost:8000
-- **Search Engine**: http://localhost:8080
-- **Monitoring**: http://localhost:3002 (Grafana)
+- **Frontend**: http://localhost:3000 (Trip planning & flight search)
+- **API Gateway**: http://localhost:3001 (tRPC endpoints)
+- **ML Service**: http://localhost:8000 (Price prediction)
+- **Search Engine**: http://localhost:8080 (High-performance search)
+- **Monitoring**: http://localhost:3002 (Grafana dashboard)
+- **Performance Dashboard**: Built-in performance monitoring
 
 ### 🛠️ Local Development
 
@@ -68,11 +77,14 @@ npm run dev:search
 
 ### Frontend Stack
 
-- **Next.js 14** with App Router
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **tRPC** for type-safe API calls
-- **Framer Motion** for animations
+- **Next.js 14** with App Router & React 18
+- **TypeScript** with strict mode for type safety
+- **Tailwind CSS** with custom design system
+- **tRPC** for end-to-end type safety
+- **Framer Motion** for smooth animations
+- **Comprehensive UI Library** (@skyscout/ui)
+- **Performance Monitoring** with Lighthouse integration
+- **Bundle Analysis** with size optimization
 
 ### Backend Services
 
@@ -100,10 +112,11 @@ npm run dev:search
 
 #### Authentication Service (`apps/auth-service`)
 
-- **Node.js** microservice
+- **Node.js** microservice with Express
 - **JWT** & **bcrypt** for security
-- **Redis** session management
+- **Redis** session management & caching
 - Rate limiting & security headers
+- Real-time authentication state
 
 ### Infrastructure
 
@@ -143,25 +156,35 @@ npm run dev:search
 ```
 skyscout-ai/
 ├── apps/
-│   ├── web/                    # Next.js frontend
-│   ├── auth-service/           # Authentication microservice (NestJS)
+│   ├── web/                    # Next.js frontend with trip planning
+│   ├── api/                    # tRPC API gateway
+│   ├── auth-service/           # Authentication microservice (Node.js)
 │   ├── search-engine/          # Flight search service (Rust)
-│   ├── search-fallback/        # Search fallback service (Go)
-│   ├── alert-service/          # Alert & wishlist service (Node.js)
-│   └── ml-service/             # ML forecasting service (Python)
+│   ├── flight-aggregation-service/ # Flight data aggregation (NestJS)
+│   ├── ml-service/             # ML forecasting service (Python)
+│   └── ai-prediction-engine/   # AI price prediction (Python)
 ├── libs/
-│   ├── shared/                 # Shared TypeScript utilities
-│   ├── ui/                     # Shared UI components
-│   ├── trpc/                   # tRPC API definitions
+│   ├── shared/                 # Shared TypeScript utilities & validators
+│   ├── ui/                     # Comprehensive UI component library
+│   ├── trpc/                   # tRPC API definitions & routers
 │   └── types/                  # Shared type definitions
-├── tools/
-│   ├── eslint-config/          # ESLint configuration
-│   └── webpack-config/         # Webpack configurations
+├── scripts/
+│   ├── performance-monitor.js  # Performance monitoring & analysis
+│   ├── autonomous-dev.js       # AI development automation
+│   └── setup-dev.sh           # Development environment setup
+├── docs/
+│   ├── performance-monitoring-guide.md
+│   ├── bundle-size-analysis-guide.md
+│   ├── clean-architecture-guide.md
+│   └── i18n-guide.md          # Internationalization guide
 ├── infra/
-│   ├── terraform/              # Terraform CDK infrastructure
-│   ├── k8s/                    # Kubernetes manifests
-│   └── docker/                 # Docker configurations
-└── docs/                       # Documentation
+│   ├── grafana/               # Monitoring dashboards
+│   ├── prometheus/            # Metrics collection
+│   └── sql/                   # Database initialization
+└── .github/
+    ├── copilot-instructions.md # AI development guidelines
+    ├── workflows/             # CI/CD pipelines
+    └── ISSUE_TEMPLATE/        # Issue templates
 ```
 
 ## 🚀 Quick Start
@@ -192,12 +215,18 @@ skyscout-ai/
 3. **Start development environment**
 
    ```bash
-   # Start all services
+   # Start all services with performance monitoring
    npm run dev
 
    # Or start specific services
-   nx dev web                    # Frontend only
-   nx dev auth-service          # Auth service only
+   npm run dev:web              # Frontend with trip planning
+   npm run dev:api              # API gateway
+   npm run dev:auth             # Authentication service
+
+   # Performance monitoring
+   npm run perf:monitor         # Performance analysis
+   npm run perf:lighthouse      # Lighthouse audit
+   npm run perf:analyze         # Bundle size analysis
    ```
 
 4. **Run tests**
@@ -211,12 +240,43 @@ skyscout-ai/
    npm run build
    ```
 
+## 🎯 Key Features
+
+### 🧳 Trip Management
+
+- **Comprehensive Itinerary Planner** - Detailed day-by-day planning with activity optimization
+- **Collaborative Planning** - Real-time collaboration with travel companions
+- **Budget Tracking** - Advanced expense management with category-based analysis
+- **Trip Dashboard** - Centralized view of all your travel plans
+
+### ✈️ Flight Discovery
+
+- **Smart Search Engine** - AI-powered flight search with price prediction
+- **Price Alerts** - Intelligent monitoring for fare changes
+- **Flexible Date Search** - Find the best deals across date ranges
+- **Multi-city Planning** - Complex itinerary support
+
+### 🏨 Accommodation & More
+
+- **Hotel Integration** - Comprehensive accommodation search
+- **Provider Comparison** - Compare prices across multiple platforms
+- **Deal Discovery** - Curated travel deals and packages
+
+### 🔧 Developer Experience
+
+- **Performance Monitoring** - Built-in Lighthouse integration and bundle analysis
+- **Type Safety** - End-to-end TypeScript with tRPC
+- **Modern Architecture** - Microservices with Docker support
+- **AI Development Tools** - GitHub Copilot integration and autonomous development scripts
+
 ## 📚 Documentation
 
-- [Architecture Overview](./docs/architecture.md)
-- [API Documentation](./docs/api.md)
-- [Deployment Guide](./docs/deployment.md)
-- [Contributing Guidelines](./CONTRIBUTING.md)
+- [Performance Monitoring Guide](./docs/performance-monitoring-guide.md) - Comprehensive performance analysis
+- [Bundle Size Analysis Guide](./docs/bundle-size-analysis-guide.md) - Optimize application bundles
+- [Clean Architecture Guide](./docs/clean-architecture-guide.md) - SOLID principles & patterns
+- [Internationalization Guide](./docs/i18n-guide.md) - Multi-language support
+- [Development Guide](./DEVELOPMENT.md) - Development setup and workflows
+- [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
 
 ## 🔒 Security
 
