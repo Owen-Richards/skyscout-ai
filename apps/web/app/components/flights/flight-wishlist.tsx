@@ -1,8 +1,3 @@
-/**
- * Flight Wishlist Component
- * Manages saved flights with smart organization and quick booking
- */
-
 'use client';
 
 import { useState } from 'react';

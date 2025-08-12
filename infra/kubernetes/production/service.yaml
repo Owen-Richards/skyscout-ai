@@ -1,0 +1,164 @@
+#
+# SkyScout AI - Production Services Configuration
+# AWS Load Balancer Controller Integration
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-web-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-web
+    environment: production
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: 'nlb'
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: 'http'
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 3000
+      protocol: TCP
+      name: https
+  selector:
+    app: skyscout-web
+    environment: production
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-api-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-api
+    environment: production
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: 'nlb'
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: 'http'
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3001
+      protocol: TCP
+      name: http
+    - port: 443
+      targetPort: 3001
+      protocol: TCP
+      name: https
+  selector:
+    app: skyscout-api
+    environment: production
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-ml-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-ml
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    app: skyscout-ml
+    environment: production
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-search-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-search
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: skyscout-search
+    environment: production
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-auth-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-auth
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3002
+      targetPort: 3002
+      protocol: TCP
+      name: http
+  selector:
+    app: skyscout-auth
+    environment: production
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-flight-aggregation-service
+  namespace: skyscout-production
+  labels:
+    app: skyscout-flight-aggregation
+    environment: production
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3003
+      targetPort: 3003
+      protocol: TCP
+      name: http
+  selector:
+    app: skyscout-flight-aggregation
+    environment: production
+
+---
+# Headless service for service discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: skyscout-services-headless
+  namespace: skyscout-production
+  labels:
+    app: skyscout-services
+    environment: production
+spec:
+  clusterIP: None
+  ports:
+    - port: 3001
+      name: api
+    - port: 3002
+      name: auth
+    - port: 3003
+      name: flight-aggregation
+    - port: 8000
+      name: ml
+    - port: 8080
+      name: search
+  selector:
+    tier: backend

@@ -1,9 +1,3 @@
-/**
- * Enhanced Card Component for SkyScout AI
- * Optimized for flight results with multiple variants and full accessibility
- * Generated with AI assistance following project patterns
- */
-
 'use client';
 
 import { forwardRef, HTMLAttributes } from 'react';

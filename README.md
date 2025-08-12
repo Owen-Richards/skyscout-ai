@@ -8,6 +8,50 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Rust](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 
+## 🏗️ Repository Structure
+
+```
+skyscout-ai/
+├── 📱 apps/                    # Applications
+│   ├── web/                   # Next.js 14 frontend
+│   ├── api/                   # Node.js/Fastify backend
+│   ├── auth-service/          # Authentication microservice
+│   ├── flight-aggregation-service/  # Flight data aggregation
+│   ├── mcp-server/           # AI development assistant
+│   ├── ml-service/           # Python ML/AI services
+│   ├── search-engine/        # Rust-based search
+│   └── ai-prediction-engine/ # AI prediction service
+│
+├── 📚 libs/                   # Shared Libraries
+│   ├── ui/                   # Component library
+│   ├── shared/               # Common utilities
+│   └── trpc/                 # API layer
+│
+├── 🏗️ infra/                 # Infrastructure
+│   ├── docker/               # Container orchestration
+│   ├── kubernetes/           # K8s manifests
+│   ├── terraform/            # Infrastructure as code
+│   ├── monitoring/           # Prometheus & Grafana
+│   └── database/            # Database scripts
+│
+├── 📖 docs/                   # Documentation
+│   ├── architecture/         # System design & patterns
+│   ├── performance/          # Performance guides
+│   ├── design/              # UI/UX design system
+│   ├── development/         # Development workflows
+│   └── ai-guides/           # AI development tools
+│
+├── 🛠️ scripts/               # Automation Scripts
+│   ├── setup/               # Environment setup
+│   ├── testing/             # Testing & performance
+│   ├── ai-automation/       # AI development tools
+│   └── deployment/          # Production deployment
+│
+└── ⚙️ tooling/               # Development Tooling
+    ├── configs/             # ESLint, TypeScript configs
+    └── patterns/            # Architecture patterns
+```
+
 ## ✨ New Features
 
 🎯 **Trip Management System** - Complete itinerary planning with collaborative features  
@@ -36,9 +80,43 @@ npm run setup:dev:win
 # macOS/Linux
 npm run setup:dev
 
-# Or manually
+# Start all services
 npm run dev:full
+
+# View logs
+npm run dev:logs
+
+# Stop services
+npm run dev:down
 ```
+
+### 🖥️ Local Development
+
+Set up individual services for development:
+
+```bash
+# Install dependencies
+npm install
+
+# Build shared libraries
+npm run build
+
+# Start development servers
+npm run dev
+
+# Start individual services
+npm run dev:web     # Frontend (port 3000)
+npm run dev:api     # Backend API (port 3001)
+npm run dev:ml      # ML Service (port 8000)
+```
+
+npm run setup:dev
+
+# Or manually
+
+npm run dev:full
+
+````
 
 This will start all services:
 
@@ -71,7 +149,7 @@ npm run dev:ml
 
 # Start search engine
 npm run dev:search
-```
+````
 
 ## 🏗️ Architecture
 

@@ -1,8 +1,3 @@
-/**
- * Trending Destinations Component
- * Shows popular destinations with current deals and travel inspiration
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

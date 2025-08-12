@@ -1,0 +1,318 @@
+#
+# SkyScout AI - Production Ingress Configuration
+# AWS Application Load Balancer Controller with SSL Termination
+#
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skyscout-ingress
+  namespace: skyscout-production
+  labels:
+    app: skyscout-ai
+    environment: production
+  annotations:
+    # AWS Load Balancer Controller
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-name: skyscout-production-alb
+
+    # SSL Configuration
+    alb.ingress.kubernetes.io/certificate-arn: ${ACM_CERTIFICATE_ARN}
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+    # Health Checks
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+
+    # Performance & Security
+    alb.ingress.kubernetes.io/load-balancer-attributes: |
+      deletion_protection.enabled=true,
+      idle_timeout.timeout_seconds=60,
+      routing.http2.enabled=true,
+      access_logs.s3.enabled=true,
+      access_logs.s3.bucket=skyscout-alb-logs,
+      access_logs.s3.prefix=production-alb
+
+    # WAF Integration
+    alb.ingress.kubernetes.io/wafv2-acl-arn: ${WAF_ACL_ARN}
+
+    # Rate Limiting & Security Headers
+    nginx.ingress.kubernetes.io/rate-limit: '100'
+    nginx.ingress.kubernetes.io/rate-limit-window: '1m'
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Frame-Options "SAMEORIGIN";
+      add_header X-Content-Type-Options "nosniff";
+      add_header X-XSS-Protection "1; mode=block";
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.mapbox.com *.google-analytics.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: *.mapbox.com *.google-analytics.com; connect-src 'self' *.mapbox.com api.skyscout.ai;";
+
+spec:
+  tls:
+    - hosts:
+        - skyscout.ai
+        - www.skyscout.ai
+        - api.skyscout.ai
+        - ml.skyscout.ai
+      secretName: skyscout-tls-secret
+
+  rules:
+    # Main Frontend - skyscout.ai
+    - host: skyscout.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-web-service
+                port:
+                  number: 80
+
+    # WWW Redirect
+    - host: www.skyscout.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-web-service
+                port:
+                  number: 80
+
+    # API Gateway - api.skyscout.ai
+    - host: api.skyscout.ai
+      http:
+        paths:
+          # tRPC API
+          - path: /trpc
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-api-service
+                port:
+                  number: 80
+
+          # Health & Metrics
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: skyscout-api-service
+                port:
+                  number: 80
+
+          - path: /metrics
+            pathType: Exact
+            backend:
+              service:
+                name: skyscout-api-service
+                port:
+                  number: 80
+
+          # Auth Service
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-auth-service
+                port:
+                  number: 3002
+
+          # Flight Aggregation
+          - path: /flights
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-flight-aggregation-service
+                port:
+                  number: 3003
+
+          # Search Engine
+          - path: /search
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-search-service
+                port:
+                  number: 8080
+
+    # ML Service - ml.skyscout.ai (Internal/Admin access)
+    - host: ml.skyscout.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-ml-service
+                port:
+                  number: 8000
+
+---
+# Internal Ingress for service-to-service communication
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skyscout-internal-ingress
+  namespace: skyscout-production
+  labels:
+    app: skyscout-ai
+    environment: production
+    type: internal
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-name: skyscout-internal-alb
+spec:
+  rules:
+    - host: internal.skyscout.ai
+      http:
+        paths:
+          # Internal ML API
+          - path: /ml
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-ml-service
+                port:
+                  number: 8000
+
+          # Internal Search API
+          - path: /search-internal
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-search-service
+                port:
+                  number: 8080
+
+          # Internal Auth API
+          - path: /auth-internal
+            pathType: Prefix
+            backend:
+              service:
+                name: skyscout-auth-service
+                port:
+                  number: 3002
+
+---
+# Network Policies for Security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: skyscout-network-policy
+  namespace: skyscout-production
+spec:
+  podSelector:
+    matchLabels:
+      environment: production
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow traffic from ALB
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+    # Allow inter-service communication
+    - from:
+        - podSelector:
+            matchLabels:
+              environment: production
+      ports:
+        - protocol: TCP
+          port: 3000
+        - protocol: TCP
+          port: 3001
+        - protocol: TCP
+          port: 3002
+        - protocol: TCP
+          port: 3003
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 8080
+  egress:
+    # Allow all outbound traffic for external APIs
+    - {}
+
+---
+# Horizontal Pod Autoscaler for Frontend
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: skyscout-web-hpa
+  namespace: skyscout-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: skyscout-web-prod
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 10
+          periodSeconds: 60
+
+---
+# HPA for API Gateway
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: skyscout-api-hpa
+  namespace: skyscout-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: skyscout-api-prod
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

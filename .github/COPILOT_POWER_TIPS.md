@@ -94,10 +94,9 @@ export const flightRouter = router({
 
 1. **GitHub Copilot** (already have)
 2. **GitHub Copilot Chat** (already have)
-3. **Tabnine** - Secondary AI completion
-4. **IntelliCode** - Microsoft's AI suggestions
-5. **Mintlify Doc Writer** - AI documentation
-6. **CodeGeeX** - Additional AI coding assistant
+3. **IntelliCode** - Microsoft's AI suggestions
+4. **Mintlify Doc Writer** - AI documentation
+5. **CodeGeeX** - Additional AI coding assistant
 
 ### For Your Tech Stack:
 

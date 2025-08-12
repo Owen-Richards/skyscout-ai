@@ -1,9 +1,3 @@
-/**
- * Budget Tracker Component
- * Comprehensive budget management and expense tracking for trips
- * Real-time spending analysis with AI-powered insights
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

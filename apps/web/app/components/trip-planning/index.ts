@@ -4,6 +4,6 @@
  */
 
 export { BudgetTracker } from './budget-tracker-clean';
-export { CollaborativePlanning } from './collaborative-planning';
-export { ExpenseTracker } from './expense-tracker';
+export { default as CollaborativePlanning } from './collaborative-planning';
+export { default as ExpenseTracker } from './expense-tracker';
 export { ItineraryManager } from './itinerary-manager';

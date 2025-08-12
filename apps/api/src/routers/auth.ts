@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { router, baseProcedure, protectedProcedure } from './trpc';
-import { authService } from '../services/auth.service';
 import { TRPCError } from '@trpc/server';
+
+import { authService } from '../services/auth.service';
 
 export const authRouter = router({
   register: baseProcedure

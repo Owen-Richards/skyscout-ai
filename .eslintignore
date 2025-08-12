@@ -1,0 +1,29 @@
+# Compiled JavaScript files from TypeScript
+apps/*/src/**/*.js
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Tooling directory - exclude to fix parsing errors
+tooling/

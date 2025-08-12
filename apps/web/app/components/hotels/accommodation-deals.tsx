@@ -1,9 +1,3 @@
-/**
- * Accommodation Deals Component
- * Showcases the best deals from Hotels, Airbnb, VRBO, and more
- * Designed to outperform Booking.com and Skyscanner with AI-powered optimization
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

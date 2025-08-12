@@ -1,10 +1,6 @@
-/**
- * Mobile Menu Toggle Component
- * Following Single Responsibility Principle - handles only mobile menu toggle
- */
+import { Menu, X } from 'lucide-react';
 
 import { Button } from '@skyscout/ui';
-import { Menu, X } from 'lucide-react';
 
 interface MobileMenuToggleProps {
   readonly isOpen: boolean;

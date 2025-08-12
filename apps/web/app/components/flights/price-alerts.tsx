@@ -1,8 +1,3 @@
-/**
- * Price Alerts Component
- * Price monitoring and alerts for flight routes
- */
-
 'use client';
 
 import { useState } from 'react';

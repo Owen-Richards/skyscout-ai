@@ -1,10 +1,10 @@
 'use client';
 
+import { Monitor, Moon, Sun } from 'lucide-react';
 import * as React from 'react';
-import { Moon, Sun, Monitor } from 'lucide-react';
-import { useTheme } from './theme-provider';
-import { Button } from './button';
 import { cn } from '../lib/utils';
+import { Button } from './button';
+import { useTheme } from './theme-provider';
 
 interface ThemeToggleProps {
   /**
@@ -37,6 +37,7 @@ interface ThemeToggleProps {
 
 /**
  * Simple theme toggle button that cycles through light/dark modes
+ * Optimized for instant switching with no lag
  */
 export const ThemeToggle = React.forwardRef<
   HTMLButtonElement,
@@ -53,15 +54,10 @@ export const ThemeToggle = React.forwardRef<
     },
     ref
   ) => {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = React.useState(false);
+    const { theme, setTheme, resolvedTheme } = useTheme();
 
-    // Prevent hydration mismatch by only rendering after mount
-    React.useEffect(() => {
-      setMounted(true);
-    }, []);
-
-    const handleToggle = () => {
+    const handleToggle = React.useCallback(() => {
+      // Immediate theme switching with no delays
       if (showSystem) {
         // Cycle through light -> dark -> system
         if (theme === 'light') {
@@ -72,54 +68,55 @@ export const ThemeToggle = React.forwardRef<
           setTheme('light');
         }
       } else {
-        // Simple toggle between light and dark
-        setTheme(theme === 'light' ? 'dark' : 'light');
+        // Instant toggle between light and dark
+        const nextTheme = resolvedTheme === 'light' ? 'dark' : 'light';
+        setTheme(nextTheme);
       }
-    };
+    }, [theme, resolvedTheme, setTheme, showSystem]);
 
-    const getIcon = () => {
+    // Use resolved theme for immediate visual feedback
+    const getIcon = React.useMemo(() => {
       const iconSize = size === 'icon' ? 'h-5 w-5' : 'h-4 w-4';
-      switch (theme) {
+      const currentTheme = theme === 'system' ? resolvedTheme : theme;
+
+      switch (currentTheme) {
         case 'light':
           return <Sun className={iconSize} />;
         case 'dark':
           return <Moon className={iconSize} />;
-        case 'system':
-          return <Monitor className={iconSize} />;
         default:
-          return <Sun className={iconSize} />;
+          return theme === 'system' ? (
+            <Monitor className={iconSize} />
+          ) : (
+            <Sun className={iconSize} />
+          );
       }
-    };
+    }, [theme, resolvedTheme, size]);
 
-    const getLabel = () => {
+    const getLabel = React.useMemo(() => {
+      if (theme === 'system') {
+        return `System (${resolvedTheme})`;
+      }
       switch (theme) {
         case 'light':
           return 'Light';
         case 'dark':
           return 'Dark';
-        case 'system':
-          return 'System';
         default:
           return 'Light';
       }
-    };
+    }, [theme, resolvedTheme]);
 
-    // Don't render anything until mounted to prevent hydration mismatch
-    if (!mounted) {
-      return (
-        <Button
-          ref={ref}
-          variant={variant}
-          size={size}
-          className={cn('transition-all', className)}
-          disabled
-          {...props}
-        >
-          <Sun className={size === 'icon' ? 'h-5 w-5' : 'h-4 w-4'} />
-          {showLabels && <span className="ml-2">Light</span>}
-        </Button>
-      );
-    }
+    const getNextThemeLabel = React.useMemo(() => {
+      if (showSystem) {
+        return theme === 'light'
+          ? 'dark'
+          : theme === 'dark'
+            ? 'system'
+            : 'light';
+      }
+      return resolvedTheme === 'light' ? 'dark' : 'light';
+    }, [theme, resolvedTheme, showSystem]);
 
     return (
       <Button
@@ -127,22 +124,12 @@ export const ThemeToggle = React.forwardRef<
         variant={variant}
         size={size}
         onClick={handleToggle}
-        className={cn('transition-all', className)}
-        aria-label={`Switch to ${
-          showSystem
-            ? theme === 'light'
-              ? 'dark'
-              : theme === 'dark'
-                ? 'system'
-                : 'light'
-            : theme === 'light'
-              ? 'dark'
-              : 'light'
-        } theme`}
+        className={cn('theme-instant', className)}
+        aria-label={`Switch to ${getNextThemeLabel} theme`}
         {...props}
       >
-        {getIcon()}
-        {showLabels && <span className="ml-2">{getLabel()}</span>}
+        {getIcon}
+        {showLabels && <span className="ml-2">{getLabel}</span>}
       </Button>
     );
   }
@@ -152,6 +139,7 @@ ThemeToggle.displayName = 'ThemeToggle';
 
 /**
  * Theme selector with dropdown/segmented control
+ * Optimized for instant switching with no lag
  */
 interface ThemeSelectProps {
   /**
@@ -184,54 +172,28 @@ export const ThemeSelect = React.forwardRef<HTMLDivElement, ThemeSelectProps>(
     ref
   ) => {
     const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = React.useState(false);
-
-    // Prevent hydration mismatch by only rendering after mount
-    React.useEffect(() => {
-      setMounted(true);
-    }, []);
 
     const themes: Array<{
       value: 'light' | 'dark' | 'system';
       icon: React.ComponentType<{ className?: string }>;
       label: string;
-    }> = [
-      { value: 'light', icon: Sun, label: 'Light' },
-      { value: 'dark', icon: Moon, label: 'Dark' },
-      ...(showSystem
-        ? [{ value: 'system' as const, icon: Monitor, label: 'System' }]
-        : []),
-    ];
+    }> = React.useMemo(
+      () => [
+        { value: 'light', icon: Sun, label: 'Light' },
+        { value: 'dark', icon: Moon, label: 'Dark' },
+        ...(showSystem
+          ? [{ value: 'system' as const, icon: Monitor, label: 'System' }]
+          : []),
+      ],
+      [showSystem]
+    );
 
-    // Don't render anything until mounted to prevent hydration mismatch
-    if (!mounted) {
-      return (
-        <div
-          ref={ref}
-          className={cn(
-            'inline-flex rounded-md border border-border p-1',
-            orientation === 'vertical' ? 'flex-col' : 'flex-row',
-            className
-          )}
-          role="radiogroup"
-          aria-label="Theme selection"
-          {...props}
-        >
-          <Button
-            variant="default"
-            size="sm"
-            disabled
-            className={cn(
-              'transition-all',
-              orientation === 'vertical' ? 'justify-start' : 'justify-center'
-            )}
-          >
-            <Sun className="h-4 w-4" />
-            {showLabels && <span className="ml-2">Light</span>}
-          </Button>
-        </div>
-      );
-    }
+    const handleThemeChange = React.useCallback(
+      (newTheme: 'light' | 'dark' | 'system') => {
+        setTheme(newTheme);
+      },
+      [setTheme]
+    );
 
     return (
       <div
@@ -250,9 +212,9 @@ export const ThemeSelect = React.forwardRef<HTMLDivElement, ThemeSelectProps>(
             key={value}
             variant={theme === value ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setTheme(value)}
+            onClick={() => handleThemeChange(value)}
             className={cn(
-              'transition-all',
+              'transition-all duration-200',
               orientation === 'vertical' ? 'justify-start' : 'justify-center'
             )}
             role="radio"

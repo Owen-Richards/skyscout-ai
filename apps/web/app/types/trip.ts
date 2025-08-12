@@ -773,30 +773,4 @@ export interface TripVote {
   timestamp: string;
 }
 
-// Export all types
-export type {
-  BookingDocument,
-  BudgetAlert,
-  BudgetCategory,
-  ExpenseSplit,
-  ItineraryDay,
-  ItineraryItem,
-  TravelerPreferences,
-  Trip,
-  TripActivity,
-  TripAnalytics,
-  TripBooking,
-  TripBudget,
-  TripCollaboration,
-  TripCollaborator,
-  TripComment,
-  TripDestination,
-  TripExpense,
-  TripItinerary,
-  TripPermissions,
-  TripPreferences,
-  TripRecommendation,
-  TripTemplate,
-  TripTraveler,
-  TripVote,
-};
+// All types are exported individually above

@@ -1,0 +1,443 @@
+name: 🚀 SkyScout AI - Complete CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      services:
+        description: 'Services to deploy (comma-separated or "all")'
+        required: false
+        default: 'all'
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+  REGISTRY: ghcr.io
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════
+  # 🧪 QUALITY ASSURANCE PIPELINE
+  # ═══════════════════════════════════════════════════════════════
+
+  code-quality:
+    name: 🔍 Code Quality & Security
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.quality-gate.outputs.should-deploy }}
+
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build shared libraries
+        run: npm run build
+
+      - name: 🧹 Lint & Format Check
+        run: |
+          npm run lint
+          npm run format:check
+
+      - name: 🔍 TypeScript Check
+        run: npm run type-check
+
+      - name: 🧪 Run Tests
+        run: |
+          npm run test
+          npm run test:coverage
+
+      - name: 🔒 Security Audit
+        run: |
+          npm audit --audit-level=moderate
+          npm run security:deps
+
+      - name: 🛡️ SAST Security Scan
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_DOCKERFILE: true
+          VALIDATE_YAML: true
+
+      - name: 📊 SonarCloud Analysis
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: ✅ Quality Gate Decision
+        id: quality-gate
+        run: |
+          echo "should-deploy=true" >> $GITHUB_OUTPUT
+          echo "✅ All quality checks passed - Ready for deployment"
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🏗️ BUILD & CONTAINERIZATION PIPELINE
+  # ═══════════════════════════════════════════════════════════════
+
+  build-matrix:
+    name: 🐳 Build Services
+    needs: code-quality
+    if: needs.code-quality.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - name: web
+            dockerfile: apps/web/Dockerfile
+            context: .
+            port: 3000
+          - name: api
+            dockerfile: apps/api/Dockerfile
+            context: .
+            port: 3001
+          - name: auth-service
+            dockerfile: apps/auth-service/Dockerfile
+            context: .
+            port: 3002
+          - name: flight-aggregation-service
+            dockerfile: apps/flight-aggregation-service/Dockerfile
+            context: .
+            port: 3003
+          - name: ml-service
+            dockerfile: apps/ml-service/Dockerfile
+            context: .
+            port: 8000
+          - name: search-engine
+            dockerfile: apps/search-engine/Dockerfile
+            context: .
+            port: 8080
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🔐 Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: 🏗️ Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.service.context }}
+          file: ${{ matrix.service.dockerfile }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service.name }}:${{ env.IMAGE_TAG }}
+            ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service.name }}:latest
+            ${{ env.ECR_REGISTRY }}/skyscout-${{ matrix.service.name }}:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/skyscout-${{ matrix.service.name }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            PORT=${{ matrix.service.port }}
+
+      - name: 🛡️ Scan Docker image for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service.name }}:${{ env.IMAGE_TAG }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: 📋 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🚀 DEPLOYMENT PIPELINE
+  # ═══════════════════════════════════════════════════════════════
+
+  deploy-development:
+    name: 🧪 Deploy to Development
+    needs: [code-quality, build-matrix]
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'development')
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🏗️ Deploy to EKS Development
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-dev
+
+          # Apply Kubernetes manifests
+          envsubst < infra/kubernetes/development/deployment.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/development/service.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/development/ingress.yaml | kubectl apply -f -
+
+          # Wait for deployment
+          kubectl rollout status deployment/skyscout-web-dev
+          kubectl rollout status deployment/skyscout-api-dev
+
+      - name: 🔍 Health Check Development
+        run: |
+          sleep 30
+          curl -f http://localhost:3000/health || exit 1
+          curl -f http://localhost:3001/health || exit 1
+
+  deploy-staging:
+    name: 🎭 Deploy to Staging
+    needs: [code-quality, build-matrix, deploy-development]
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🗄️ Run Database Migrations
+        run: |
+          # Connect to staging RDS and run migrations
+          aws ssm get-parameter --name "/skyscout/staging/database-url" --with-decryption --query 'Parameter.Value' --output text > .env
+          npx prisma migrate deploy
+
+      - name: 🏗️ Deploy to EKS Staging
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-staging
+
+          # Blue-Green Deployment Strategy
+          envsubst < infra/kubernetes/staging/deployment.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/staging/service.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/staging/ingress.yaml | kubectl apply -f -
+
+          # Wait for rollout
+          kubectl rollout status deployment/skyscout-web-staging
+          kubectl rollout status deployment/skyscout-api-staging
+
+      - name: 🧪 End-to-End Testing (Staging)
+        run: |
+          npm install -g @playwright/test
+
+          # Set staging URLs
+          export BASE_URL=https://staging.skyscout.ai
+          export API_URL=https://api.staging.skyscout.ai
+
+          # Run E2E tests
+          npx playwright test --config=playwright.config.staging.js
+
+      - name: 🔍 Performance Testing (Staging)
+        run: |
+          # Lighthouse CI for staging URLs
+          npm install -g @lhci/cli
+
+          lhci autorun --config=.lighthouserc.staging.js
+
+  deploy-production:
+    name: 🚀 Deploy to Production
+    needs: [code-quality, build-matrix, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🗄️ Production Database Backup
+        run: |
+          # Create backup before deployment
+          aws rds create-db-snapshot \
+            --db-instance-identifier skyscout-prod \
+            --db-snapshot-identifier skyscout-prod-$(date +%Y%m%d%H%M%S)
+
+      - name: 🏗️ Deploy to EKS Production (Blue-Green)
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-prod
+
+          # Blue-Green deployment with Argo Rollouts
+          envsubst < infra/kubernetes/production/rollout.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/production/service.yaml | kubectl apply -f -
+          envsubst < infra/kubernetes/production/ingress.yaml | kubectl apply -f -
+
+          # Monitor rollout
+          kubectl argo rollouts get rollout skyscout-web-prod --watch
+
+      - name: 🔍 Production Health Checks
+        run: |
+          # Wait for services to be ready
+          sleep 60
+
+          # Health check all production endpoints
+          urls=(
+            "https://skyscout.ai"
+            "https://skyscout.ai/search"
+            "https://skyscout.ai/deals"
+            "https://skyscout.ai/flights"
+            "https://skyscout.ai/hotels"
+            "https://api.skyscout.ai/health"
+            "https://ml.skyscout.ai/health"
+          )
+
+          for url in "${urls[@]}"; do
+            echo "🔍 Checking $url"
+            curl -f -m 30 "$url" || exit 1
+          done
+
+      - name: 🎯 Production Performance Validation
+        run: |
+          # Lighthouse performance audit
+          npm install -g @lhci/cli
+          lhci autorun --config=.lighthouserc.production.js
+
+          # Alert if performance regression
+          if [ $? -ne 0 ]; then
+            echo "❌ Performance regression detected!"
+            # Trigger rollback mechanism
+            kubectl argo rollouts abort skyscout-web-prod
+            exit 1
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🚨 MONITORING & ALERTING
+  # ═══════════════════════════════════════════════════════════════
+
+  post-deployment-monitoring:
+    name: 📊 Post-Deployment Monitoring
+    needs: [deploy-production]
+    if: always() && needs.deploy-production.result == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔔 Slack Notification - Success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            🎉 SkyScout AI Production Deployment Successful!
+
+            📅 Deployed: ${{ github.sha }}
+            🌐 Live at: https://skyscout.ai
+            📊 Monitoring: https://monitoring.skyscout.ai
+
+            ✅ All health checks passed
+            ⚡ Performance metrics within SLA
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: 📊 Update Monitoring Dashboards
+        run: |
+          # Update Grafana dashboards with new deployment
+          curl -X POST https://monitoring.skyscout.ai/api/annotations \
+            -H "Authorization: Bearer ${{ secrets.GRAFANA_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "dashboardId": 1,
+              "panelId": 1,
+              "time": '$(date +%s000)',
+              "tags": ["deployment", "production"],
+              "text": "Production deployment: ${{ github.sha }}"
+            }'
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🚨 ROLLBACK CAPABILITY
+  # ═══════════════════════════════════════════════════════════════
+
+  rollback-production:
+    name: 🔄 Emergency Rollback
+    if: failure() && needs.deploy-production.result == 'failure'
+    needs: [deploy-production]
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🔄 Rollback Production Deployment
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-prod
+
+          # Rollback to previous version
+          kubectl argo rollouts undo skyscout-web-prod
+          kubectl argo rollouts undo skyscout-api-prod
+
+          # Wait for rollback to complete
+          kubectl argo rollouts get rollout skyscout-web-prod --watch
+
+      - name: 🚨 Alert Operations Team
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: |
+            🚨 EMERGENCY ROLLBACK EXECUTED 🚨
+
+            ❌ Production deployment failed
+            🔄 Automatically rolled back to previous version
+            🌐 Site status: https://skyscout.ai
+
+            👥 @oncall Please investigate immediately
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

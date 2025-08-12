@@ -1,3 +1,5 @@
+'use client';
+
 // Components
 export { Avatar, avatarVariants, type AvatarProps } from './components/avatar';
 export { Badge, badgeVariants, type BadgeProps } from './components/badge';
@@ -14,26 +16,21 @@ export {
 } from './components/card';
 export {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
 } from './components/dropdown-menu';
-export {
-  FloatingActionButton,
-  fabVariants,
-  type FloatingActionButtonProps,
-} from './components/floating-action-button';
 export {
   Form,
   FormError,
@@ -47,6 +44,18 @@ export {
   type FormSubmitProps,
 } from './components/form';
 export { Input, inputVariants, type InputProps } from './components/input';
+export { Popover, PopoverContent, PopoverTrigger } from './components/popover';
+export { Progress, type ProgressProps } from './components/progress';
+export {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  type TabsContentProps,
+  type TabsListProps,
+  type TabsProps,
+  type TabsTriggerProps,
+} from './components/tabs';
 export {
   ToggleButton,
   toggleVariants,

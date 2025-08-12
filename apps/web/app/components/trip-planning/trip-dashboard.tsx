@@ -1,9 +1,3 @@
-/**
- * Trip Planning Dashboard
- * Comprehensive trip planning interface with budget tracking and itinerary management
- * Designed to be a complete travel planning solution
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

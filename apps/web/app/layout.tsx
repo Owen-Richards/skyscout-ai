@@ -1,10 +1,13 @@
-import { ThemeProvider } from '@skyscout/ui';
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
+
 import { TRPCProvider } from './components/providers/trpc-provider';
 import { I18nProvider } from './contexts/i18n-context';
 import { TranslationProvider } from './contexts/translation-context';
 import './globals.css';
+import { ThemeScript } from './theme-script';
+
+import { ThemeProvider } from '@skyscout/ui/components/theme-provider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -80,6 +83,9 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
       <head>
+        {/* Theme initialization script - prevents FOUC */}
+        <ThemeScript />
+
         {/* Preload critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

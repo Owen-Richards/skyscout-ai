@@ -1,0 +1,22 @@
+{
+  "name": "@skyscout/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for SkyScout AI development assistance",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "mcp:serve": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.1",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.0"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}

@@ -1,9 +1,3 @@
-/**
- * Provider Comparison Component
- * Shows real-time price comparison across all major booking platforms
- * Designed to demonstrate SkyScout's superior pricing
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

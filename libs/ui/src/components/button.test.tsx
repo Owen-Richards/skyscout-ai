@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { Plus, Search } from 'lucide-react';
-import React from 'react';
 import { Button } from './button';
 
 expect.extend(toHaveNoViolations);

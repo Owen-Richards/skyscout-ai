@@ -1,9 +1,3 @@
-/**
- * Trip Budget Tracker Component
- * Comprehensive budget management for trip planning
- * Standalone feature integrating with flights and hotels
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

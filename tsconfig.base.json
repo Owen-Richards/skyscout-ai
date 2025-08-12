@@ -20,8 +20,8 @@
     "paths": {
       "@skyscout/shared": ["libs/shared/src/index.ts"],
       "@skyscout/ui": ["libs/ui/src/index.ts"],
-      "@skyscout/trpc": ["libs/trpc/src/index.ts"],
-      "@skyscout/types": ["libs/types/src/index.ts"]
+      "@skyscout/ui/*": ["libs/ui/src/*"],
+      "@skyscout/trpc": ["libs/trpc/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
