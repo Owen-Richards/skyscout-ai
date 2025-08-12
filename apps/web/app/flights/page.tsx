@@ -6,33 +6,32 @@
 
 'use client';
 
-import { useState, Suspense } from 'react';
+import type { FlightOffer, FlightSearch } from '@skyscout/shared';
+import { Button, Card, cn } from '@skyscout/ui';
 import {
-  FlightSearchHero,
-  FlightResults,
-  FlightFilters,
-  FlightMap,
-  RecentSearches,
-  TrendingDestinations,
-  FlightDeals,
-} from '../components';
-import { Navigation } from '../components/layout/navigation';
-import { Button, Card } from '@skyscout/ui';
-import {
-  MapPin,
-  List,
-  Heart,
   Bell,
-  Sparkles,
-  Search,
-  Filter,
   Calendar,
-  Plane,
   Clock,
+  Filter,
+  Heart,
+  List,
+  MapPin,
+  Plane,
+  Search,
+  Sparkles,
   Star,
 } from 'lucide-react';
-import type { FlightSearch, FlightOffer } from '@skyscout/shared';
-import { cn } from '@skyscout/ui';
+import { Suspense, useState } from 'react';
+import {
+  FlightDeals,
+  FlightFilters,
+  FlightMap,
+  FlightResults,
+  FlightSearchHero,
+  ProgressiveNavigation,
+  RecentSearches,
+  TrendingDestinations,
+} from '../components';
 
 export default function FlightsPage() {
   const [searchResults, setSearchResults] = useState<FlightOffer[]>([]);
@@ -115,7 +114,7 @@ export default function FlightsPage() {
 
   return (
     <>
-      <Navigation />
+      <ProgressiveNavigation />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
         {/* Hero Section with Enhanced Search */}
         <FlightSearchHero onSearch={handleSearch} />

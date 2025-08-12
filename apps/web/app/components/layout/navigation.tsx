@@ -11,13 +11,13 @@
 
 'use client';
 
-import { cn, ThemeToggle } from '@skyscout/ui';
+import { ThemeToggle, cn } from '@skyscout/ui';
 import { useNavigationState } from '../../hooks/use-navigation';
-import { NavigationLogo } from './navigation-logo';
-import { NavigationItems } from './navigation-items';
-import { UserMenu } from './user-menu';
-import { MobileMenuToggle } from './mobile-menu-toggle';
 import { SettingsMenu } from '../navigation/settings-menu';
+import { MobileMenuToggle } from './mobile-menu-toggle';
+import { NavigationItems } from './navigation-items';
+import { NavigationLogo } from './navigation-logo';
+import { UserMenu } from './user-menu';
 
 interface NavigationProps {
   readonly className?: string;
@@ -32,7 +32,7 @@ export function Navigation({ className }: NavigationProps) {
       {/* Main Navigation */}
       <nav
         className={cn(
-          'sticky top-0 z-50 w-full border-b transition-all duration-300',
+          'sticky top-0 z-50 w-full border-b navigation-container theme-instant',
           isScrolled
             ? 'bg-background/95 backdrop-blur-lg shadow-lg'
             : 'bg-background/80 backdrop-blur-sm',

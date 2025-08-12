@@ -1,0 +1,460 @@
+#
+# SkyScout AI - Production Kubernetes Deployment
+# AWS EKS Optimized Configuration
+#
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: skyscout-production
+  labels:
+    environment: production
+    app: skyscout-ai
+
+---
+# Frontend (Next.js) Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-web-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-web
+    environment: production
+    tier: frontend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: skyscout-web
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-web
+        environment: production
+        tier: frontend
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '3000'
+        prometheus.io/path: '/api/metrics'
+    spec:
+      serviceAccountName: skyscout-web-sa
+      containers:
+        - name: web
+          image: ${ECR_REGISTRY}/skyscout-web:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: NEXT_PUBLIC_API_URL
+              value: 'https://api.skyscout.ai'
+            - name: NEXT_PUBLIC_MAPBOX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: mapbox-token
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: database-url
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '100m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+
+---
+# API Gateway Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-api-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-api
+    environment: production
+    tier: backend
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: skyscout-api
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-api
+        environment: production
+        tier: backend
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '3001'
+        prometheus.io/path: '/metrics'
+    spec:
+      serviceAccountName: skyscout-api-sa
+      containers:
+        - name: api
+          image: ${ECR_REGISTRY}/skyscout-api:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001
+              name: http
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: PORT
+              value: '3001'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: redis-url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: jwt-secret
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '200m'
+            limits:
+              memory: '1Gi'
+              cpu: '1000m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+---
+# ML Service Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-ml-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-ml
+    environment: production
+    tier: ml
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: skyscout-ml
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-ml
+        environment: production
+        tier: ml
+    spec:
+      containers:
+        - name: ml-service
+          image: ${ECR_REGISTRY}/skyscout-ml-service:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: ENVIRONMENT
+              value: 'production'
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: redis-url
+          resources:
+            requests:
+              memory: '1Gi'
+              cpu: '500m'
+              nvidia.com/gpu: 0.5
+            limits:
+              memory: '2Gi'
+              cpu: '2000m'
+              nvidia.com/gpu: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+---
+# Search Engine Deployment (Rust)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-search-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-search
+    environment: production
+    tier: search
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: skyscout-search
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-search
+        environment: production
+        tier: search
+    spec:
+      containers:
+        - name: search-engine
+          image: ${ECR_REGISTRY}/skyscout-search-engine:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: RUST_ENV
+              value: 'production'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: database-url
+            - name: OPENSEARCH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: opensearch-url
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '200m'
+            limits:
+              memory: '1Gi'
+              cpu: '1000m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# Auth Service Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-auth-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-auth
+    environment: production
+    tier: auth
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: skyscout-auth
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-auth
+        environment: production
+        tier: auth
+    spec:
+      containers:
+        - name: auth-service
+          image: ${ECR_REGISTRY}/skyscout-auth-service:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+              name: http
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: redis-url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: jwt-secret
+            - name: OAUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: oauth-client-id
+            - name: OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: oauth-client-secret
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '100m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+# Flight Aggregation Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skyscout-flight-aggregation-prod
+  namespace: skyscout-production
+  labels:
+    app: skyscout-flight-aggregation
+    environment: production
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: skyscout-flight-aggregation
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: skyscout-flight-aggregation
+        environment: production
+        tier: backend
+    spec:
+      containers:
+        - name: flight-aggregation
+          image: ${ECR_REGISTRY}/skyscout-flight-aggregation-service:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3003
+              name: http
+          env:
+            - name: NODE_ENV
+              value: 'production'
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: redis-url
+            - name: AMADEUS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: amadeus-api-key
+            - name: SKYSCANNER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: skyscout-secrets
+                  key: skyscanner-api-key
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '200m'
+            limits:
+              memory: '1Gi'
+              cpu: '1000m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3003
+            initialDelaySeconds: 5
+            periodSeconds: 5

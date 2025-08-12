@@ -6,13 +6,13 @@
 
 'use client';
 
+import { ProgressiveNavigation } from '../components';
 import { HotelsSection } from '../components/hotels';
-import { Navigation } from '../components/layout/navigation';
 
 export default function HotelsPage() {
   return (
     <>
-      <Navigation />
+      <ProgressiveNavigation />
       <main id="main-content" className="flex-1">
         {/* Hotels Header */}
         <section className="relative bg-gradient-to-br from-green-500/10 via-blue-500/10 to-purple-500/10 py-16 px-4 sm:px-6 lg:px-8">

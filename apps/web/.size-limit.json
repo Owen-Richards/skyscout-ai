@@ -1,37 +1,95 @@
 [
   {
-    "name": "Main Bundle",
-    "path": "apps/web/.next/static/chunks/pages/_app-*.js",
-    "limit": "250 KB",
+    "name": "Main App Bundle",
+    "path": ".next/static/chunks/app/layout-*.js",
+    "limit": "150 KB",
     "webpack": false,
-    "gzip": true
+    "gzip": true,
+    "brotli": true
   },
   {
-    "name": "Home Page",
-    "path": "apps/web/.next/static/chunks/pages/index-*.js",
-    "limit": "50 KB",
+    "name": "Home Page Bundle",
+    "path": ".next/static/chunks/app/page-*.js",
+    "limit": "40 KB",
     "webpack": false,
-    "gzip": true
+    "gzip": true,
+    "brotli": true
   },
   {
-    "name": "Vendors Bundle",
-    "path": "apps/web/.next/static/chunks/vendors-*.js",
+    "name": "Framework Bundle",
+    "path": ".next/static/chunks/framework-*.js",
     "limit": "200 KB",
     "webpack": false,
-    "gzip": true
+    "gzip": true,
+    "brotli": true
   },
   {
-    "name": "UI Library Bundle",
-    "path": "apps/web/.next/static/chunks/ui-lib-*.js",
+    "name": "Main Bundle",
+    "path": ".next/static/chunks/main-*.js",
     "limit": "100 KB",
     "webpack": false,
-    "gzip": true
+    "gzip": true,
+    "brotli": true
   },
   {
-    "name": "Shared Library Bundle",
-    "path": "apps/web/.next/static/chunks/shared-lib-*.js",
+    "name": "Webpack Runtime",
+    "path": ".next/static/chunks/webpack-*.js",
+    "limit": "8 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true
+  },
+  {
+    "name": "Vendor Libraries",
+    "path": ".next/static/chunks/vendors-*.js",
+    "limit": "300 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true
+  },
+  {
+    "name": "UI Library Chunk",
+    "path": ".next/static/chunks/ui-lib-*.js",
+    "limit": "80 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true
+  },
+  {
+    "name": "Shared Library Chunk",
+    "path": ".next/static/chunks/shared-lib-*.js",
     "limit": "50 KB",
     "webpack": false,
-    "gzip": true
+    "gzip": true,
+    "brotli": true
+  },
+  {
+    "name": "Total JavaScript Bundle",
+    "path": ".next/static/chunks/**/*.js",
+    "limit": "800 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true,
+    "ignore": ["**/*.map", "**/polyfills-*.js"]
+  },
+  {
+    "name": "CSS Bundle",
+    "path": ".next/static/css/**/*.css",
+    "limit": "50 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true
+  },
+  {
+    "name": "Critical Path Resources",
+    "path": [
+      ".next/static/chunks/main-*.js",
+      ".next/static/chunks/webpack-*.js",
+      ".next/static/chunks/app/layout-*.js"
+    ],
+    "limit": "200 KB",
+    "webpack": false,
+    "gzip": true,
+    "brotli": true
   }
 ]

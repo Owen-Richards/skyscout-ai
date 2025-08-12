@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 @layer base {
+  /* Optimized theme switching - prevent transition delays */
+  html {
+    color-scheme: light dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -188,5 +201,84 @@
 
   .button-hover-glow:hover::before {
     left: 100%;
+  }
+
+  /* Ultra-aggressive theme switching optimizations */
+  .theme-transition-disable *,
+  .theme-transition-disable *::before,
+  .theme-transition-disable *::after {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -ms-transition: none !important;
+    transition: none !important;
+    animation: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transform: none !important;
+  }
+
+  /* Remove ALL transitions during theme change */
+  html[style*='transition: none'] *,
+  html[style*='transition: none'] *::before,
+  html[style*='transition: none'] *::after {
+    transition: none !important;
+    animation: none !important;
+    transform: translateZ(0) !important;
+  }
+
+  /* Instant theme switching - no transitions at all */
+  :root {
+    /* Remove all transition properties for instant switching */
+  }
+
+  /* Optimized theme-aware components - minimal transitions */
+  .theme-optimized {
+    will-change: auto;
+    /* Remove transitions for instant switching */
+  }
+
+  /* Navigation instant updates */
+  nav {
+    /* Remove transitions for instant theme switching */
+  }
+
+  /* Prevent layout shift with containment */
+  .navigation-container {
+    contain: layout style paint;
+  }
+
+  /* Remove all button transitions during theme switch */
+  button {
+    /* No transitions for instant feedback */
+  }
+
+  /* Remove all card transitions */
+  .card,
+  [role='card'] {
+    /* No transitions for instant theme switching */
+  }
+
+  /* Hardware acceleration for instant updates */
+  .theme-optimized,
+  nav,
+  button {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: auto;
+  }
+
+  /* Instant theme switching class */
+  .theme-instant {
+    transition: none !important;
+    animation: none !important;
+    transform: translateZ(0);
+  }
+
+  /* Completely disable all animations during theme change */
+  .theme-switching * {
+    transition: none !important;
+    animation: none !important;
+    animation-duration: 0ms !important;
   }
 }

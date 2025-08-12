@@ -1,9 +1,3 @@
-/**
- * Trip Itinerary Planner Component
- * AI-powered itinerary creation and management
- * Standalone feature integrating with flights, hotels, and budget
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

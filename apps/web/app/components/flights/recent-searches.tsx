@@ -1,8 +1,3 @@
-/**
- * Recent Searches Component
- * Shows user's recent flight searches for quick re-searching
- */
-
 'use client';
 
 import { useState } from 'react';

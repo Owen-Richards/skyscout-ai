@@ -53,6 +53,11 @@ pids/
 coverage/
 *.lcov
 
+# Performance reports
+lighthouse-report.*
+bundle-analysis-guide.md
+*.tsbuildinfo
+
 # Nx
 .nx/
 

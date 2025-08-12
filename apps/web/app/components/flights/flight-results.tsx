@@ -1,8 +1,3 @@
-/**
- * Flight Results Component
- * Displays search results with engaging visuals and smart sorting
- */
-
 'use client';
 
 import { useState } from 'react';

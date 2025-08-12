@@ -1,8 +1,3 @@
-/**
- * Advanced Flight Search Form Component
- * Engaging, user-friendly search with smart defaults and AI suggestions
- */
-
 'use client';
 
 import { useState, useEffect } from 'react';

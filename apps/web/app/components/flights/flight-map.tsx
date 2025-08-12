@@ -1,8 +1,3 @@
-/**
- * Flight Map Component
- * Interactive map view showing flight routes and prices
- */
-
 'use client';
 
 import { useState, useRef } from 'react';

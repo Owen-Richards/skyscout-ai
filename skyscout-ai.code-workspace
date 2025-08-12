@@ -119,7 +119,6 @@
     "workbench.colorTheme": "Default Dark+",
     "workbench.iconTheme": "material-icon-theme",
     "workbench.tree.indent": 20,
-    "workbench.activityBar.visible": true,
     "workbench.statusBar.visible": true,
     "workbench.sideBar.location": "left",
 
@@ -127,6 +126,28 @@
     "extensions.ignoreRecommendations": false,
     "telemetry.telemetryLevel": "error",
     "update.mode": "manual",
+    "nxConsole.generateAiAgentRules": true,
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#74c0ee",
+      "activityBar.background": "#74c0ee",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#e31c98",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#15202b99",
+      "sash.hoverBorder": "#74c0ee",
+      "statusBar.background": "#47abe8",
+      "statusBar.foreground": "#15202b",
+      "statusBarItem.hoverBackground": "#1c96e0",
+      "statusBarItem.remoteBackground": "#47abe8",
+      "statusBarItem.remoteForeground": "#15202b",
+      "titleBar.activeBackground": "#47abe8",
+      "titleBar.activeForeground": "#15202b",
+      "titleBar.inactiveBackground": "#47abe899",
+      "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#47abe8",
+    "docwriter.style": "JSDoc",
   },
   "extensions": {
     "recommendations": [
@@ -171,16 +192,11 @@
       "redhat.vscode-yaml",
 
       // Additional AI Tools
-      "tabnine.tabnine-vscode",
       "mintlify.document",
 
       // Debugging & DevTools
       "ms-vscode.vscode-node-debug2",
       "firefox-devtools.vscode-firefox-debug",
-
-      // Markdown & Documentation
-      "yzhang.markdown-all-in-one",
-      "shd101wyy.markdown-preview-enhanced",
 
       // API Development
       "rangav.vscode-thunder-client",

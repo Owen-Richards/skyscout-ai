@@ -1,8 +1,3 @@
-/**
- * Hero Section Container Component
- * Following Single Responsibility Principle - orchestrates hero section layout
- */
-
 'use client';
 
 import { Badge, Button } from '@skyscout/ui';
@@ -11,17 +6,19 @@ import { useEffect, useState } from 'react';
 import type { HeroSectionProps } from '../../types/hero';
 import { HeroBackground } from './hero-background';
 
+// Move destinations outside component to avoid re-renders
+const DESTINATIONS = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome', 'Sydney'];
+
 // Inline HeroContent component - Optimized for 5-second attention rule
 function HeroContent({ className }: { readonly className?: string }) {
   // Destination animation for increased engagement
   const [destination, setDestination] = useState('Paris');
-  const destinations = ['Paris', 'Tokyo', 'Bali', 'New York', 'Rome', 'Sydney'];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDestination(prev => {
-        const currentIndex = destinations.indexOf(prev);
-        return destinations[(currentIndex + 1) % destinations.length];
+        const currentIndex = DESTINATIONS.indexOf(prev);
+        return DESTINATIONS[(currentIndex + 1) % DESTINATIONS.length];
       });
     }, 2000);
 
@@ -57,30 +54,41 @@ function HeroContent({ className }: { readonly className?: string }) {
       {/* Main Heading - Clear value proposition */}
       <div className="mb-6">
         <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-3 leading-tight">
-          Find Your Perfect{' '}
-          <span className="bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-400 bg-clip-text text-transparent">
-            Adventure
+          Discover{' '}
+          <span className="bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+            Smart Travel
           </span>
+          <br />
+          with AI Precision
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          AI-powered flight search that predicts price drops before they happen
+          Advanced AI algorithms predict price drops, find hidden deals, and
+          optimize your travel experience with real-time market intelligence.
         </p>
       </div>
 
-      {/* Social Proof - Positioned higher for immediate credibility */}
-      <div className="mb-8 bg-background/30 backdrop-blur-sm py-2 px-4 rounded-full inline-block">
+      {/* Enhanced Social Proof */}
+      <div className="mb-8 bg-gradient-to-r from-white/10 via-sky-500/10 to-blue-500/10 backdrop-blur-sm py-3 px-6 rounded-2xl inline-block border border-sky-200/20 dark:border-sky-800/20">
         <div className="flex justify-center items-center gap-4 md:gap-8 text-muted-foreground text-sm md:text-base flex-wrap">
           <div className="flex items-center gap-2">
-            <span className="text-yellow-500">⭐</span>
-            <span className="font-medium">4.8/5</span>
+            <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+            <span className="font-semibold">4.9/5</span>
+            <span className="text-xs">rating</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-green-500">💰</span>
-            <span className="font-medium">$2M+ saved</span>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="font-semibold">$2.4M+</span>
+            <span className="text-xs">saved</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-blue-500">👥</span>
-            <span className="font-medium">50K+ travelers</span>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <span className="font-semibold">75K+</span>
+            <span className="text-xs">users</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+            <span className="font-semibold">98%</span>
+            <span className="text-xs">accuracy</span>
           </div>
         </div>
       </div>

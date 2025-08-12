@@ -1,8 +1,3 @@
-/**
- * Translation Hook
- * Custom hook for using translations throughout the application
- */
-
 'use client';
 
 import { useI18n } from '../contexts/i18n-context';

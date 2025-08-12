@@ -1,8 +1,3 @@
-/**
- * Flight Deals Component
- * Showcases current flight deals with urgency and social proof
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

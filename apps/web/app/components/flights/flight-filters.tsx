@@ -1,8 +1,3 @@
-/**
- * Flight Filters Component
- * Advanced filtering with smart presets and user-friendly controls
- */
-
 'use client';
 
 import { useState, useEffect } from 'react';

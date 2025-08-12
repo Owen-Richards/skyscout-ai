@@ -50,9 +50,22 @@
       },
       "env": {
         "node": true,
-        "es6": true
+        "es6": true,
+        "es2022": true
       },
-      "rules": {}
+      "rules": {
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "no-undef": "error",
+        "require-yield": "off",
+        "no-const-assign": "error"
+      }
+    },
+    {
+      "files": ["apps/*/src/**/*.js"],
+      "rules": {
+        "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
+        "require-yield": "off"
+      }
     }
   ]
 }

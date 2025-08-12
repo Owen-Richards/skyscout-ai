@@ -1,18 +1,22 @@
 /**
- * Home Page Component
- * Following SOLID principles with proper component separation
+ * The `HomePage` component in TypeScript React renders a page with navigation,
+ * hero section, search form, featured flight deals, hotels section, and feature
+ * showcase.
+ * @returns The `HomePage` component is being returned, which includes various
+ * sections such as the navigation, hero section with search, advanced search form,
+ * featured deals section, hotels section, and features section. Each section is
+ * rendered with specific components and handles different functionalities like
+ * search results, deal clicks, and booking clicks.
  */
-
 'use client';
 
 import {
   AdvancedSearchForm,
   DealsList,
-  FeatureShowcase,
   HeroSection,
+  ProgressiveNavigation,
 } from './components';
 import { HotelsSection } from './components/hotels';
-import { Navigation } from './components/layout/navigation';
 import type { SearchResult } from './services';
 import type { FlightDeal } from './types';
 
@@ -101,7 +105,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Navigation />
+      <ProgressiveNavigation />
       <main id="main-content" className="flex-1">
         {/* Hero Section with Search */}
         <HeroSection />
@@ -133,10 +137,16 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Enhanced Features Section */}
+        {/* <EnhancedFeatures /> */}
+
+        {/* Interactive Demo Section */}
+        {/* <InteractiveDemo /> */}
+
         {/* Features Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/50">
+        {/* <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/50">
           <FeatureShowcase />
-        </section>
+        </section> */}
       </main>
     </>
   );

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "skyscout-ai": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\Owenl\\source\\repos\\skyscout-ai\\apps\\mcp-server\\dist\\index.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}

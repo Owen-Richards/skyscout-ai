@@ -1,0 +1,439 @@
+name: 🚀 SkyScout AI - Complete CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop, feature/*]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Daily performance audits
+    - cron: '0 2 * * *'
+
+env:
+  NODE_VERSION: '22.17.0'
+  PYTHON_VERSION: '3.11'
+  CARGO_VERSION: 'stable'
+  AWS_REGION: us-east-1
+
+  # Performance thresholds
+  LIGHTHOUSE_PERFORMANCE_THRESHOLD: 90
+  BUNDLE_SIZE_LIMIT_MB: 5
+  BUILD_TIME_LIMIT_MINUTES: 10
+
+jobs:
+  # ===== CODE QUALITY & ANALYSIS =====
+  quality-gate:
+    name: 🔍 Quality Gate
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.quality-check.outputs.deploy }}
+      performance-baseline: ${{ steps.performance.outputs.baseline }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci --prefer-offline --no-audit
+          npm run build:libs
+
+      - name: 🧹 Code Quality Checks
+        run: |
+          npm run lint
+          npm run type-check
+          npm run test:unit --coverage
+
+      - name: 📊 Bundle Size Analysis
+        id: bundle-analysis
+        run: |
+          cd apps/web
+          npm run build:analyze
+          BUNDLE_SIZE=$(node -e "console.log(require('fs').statSync('.next/static/chunks/main-*.js').size / 1024 / 1024)")
+          echo "bundle-size=$BUNDLE_SIZE" >> $GITHUB_OUTPUT
+
+          if [ $(echo "$BUNDLE_SIZE > ${{ env.BUNDLE_SIZE_LIMIT_MB }}" | bc) -eq 1 ]; then
+            echo "❌ Bundle size $BUNDLE_SIZE MB exceeds limit ${{ env.BUNDLE_SIZE_LIMIT_MB }} MB"
+            exit 1
+          fi
+
+      - name: 🚀 Performance Baseline
+        id: performance
+        run: |
+          npm run perf:ci
+          echo "baseline=$(date +%s)" >> $GITHUB_OUTPUT
+
+      - name: ✅ Quality Gate Decision
+        id: quality-check
+        run: |
+          echo "deploy=true" >> $GITHUB_OUTPUT
+
+  # ===== SECURITY SCANNING =====
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🛡️ Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: 📈 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: 🔍 Snyk Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  # ===== MULTI-SERVICE BUILD =====
+  build-matrix:
+    name: 🏗️ Build Matrix
+    runs-on: ubuntu-latest
+    needs: [quality-gate, security-scan]
+    strategy:
+      matrix:
+        service:
+          - { name: 'web', path: 'apps/web', runtime: 'node' }
+          - { name: 'api', path: 'apps/api', runtime: 'node' }
+          - { name: 'auth-service', path: 'apps/auth-service', runtime: 'node' }
+          - {
+              name: 'flight-aggregation',
+              path: 'apps/flight-aggregation-service',
+              runtime: 'node',
+            }
+          - {
+              name: 'search-engine',
+              path: 'apps/search-engine',
+              runtime: 'rust',
+            }
+          - { name: 'ml-service', path: 'apps/ml-service', runtime: 'python' }
+          - {
+              name: 'ai-prediction',
+              path: 'apps/ai-prediction-engine',
+              runtime: 'python',
+            }
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Runtime - Node.js
+        if: matrix.service.runtime == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 🔧 Setup Runtime - Python
+        if: matrix.service.runtime == 'python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: 🔧 Setup Runtime - Rust
+        if: matrix.service.runtime == 'rust'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.CARGO_VERSION }}
+          override: true
+
+      - name: 🏗️ Build Service - Node.js
+        if: matrix.service.runtime == 'node'
+        run: |
+          cd ${{ matrix.service.path }}
+          npm ci
+          npm run build
+          npm run test
+
+      - name: 🏗️ Build Service - Python
+        if: matrix.service.runtime == 'python'
+        run: |
+          cd ${{ matrix.service.path }}
+          pip install -r requirements.txt
+          python -m pytest
+
+      - name: 🏗️ Build Service - Rust
+        if: matrix.service.runtime == 'rust'
+        run: |
+          cd ${{ matrix.service.path }}
+          cargo build --release
+          cargo test
+
+      - name: 🐳 Build Docker Image
+        run: |
+          docker build -t skyscout-${{ matrix.service.name }}:${{ github.sha }} ${{ matrix.service.path }}
+          docker tag skyscout-${{ matrix.service.name }}:${{ github.sha }} skyscout-${{ matrix.service.name }}:latest
+
+      - name: 📤 Push to ECR
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          docker tag skyscout-${{ matrix.service.name }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/skyscout-${{ matrix.service.name }}:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/skyscout-${{ matrix.service.name }}:latest
+
+  # ===== INTEGRATION TESTS =====
+  integration-tests:
+    name: 🧪 Integration Tests
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: skyscout_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🗄️ Setup Test Database
+        run: |
+          cd apps/api
+          npx prisma migrate deploy
+          npx prisma db seed
+
+      - name: 🧪 Run Integration Tests
+        run: |
+          npm run test:integration
+          npm run test:e2e:headless
+
+  # ===== PERFORMANCE TESTS =====
+  performance-tests:
+    name: ⚡ Performance Tests
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Start Application
+        run: |
+          cd apps/web
+          npm run build
+          npm run start &
+          sleep 30
+
+      - name: 🔍 Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          configPath: './lighthouse.config.js'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: 📊 Performance Budget Check
+        run: |
+          cd apps/web
+          npm run perf:budget
+
+          # Check against thresholds
+          SCORE=$(node scripts/get-lighthouse-score.js)
+          if [ $SCORE -lt ${{ env.LIGHTHOUSE_PERFORMANCE_THRESHOLD }} ]; then
+            echo "❌ Performance score $SCORE below threshold ${{ env.LIGHTHOUSE_PERFORMANCE_THRESHOLD }}"
+            exit 1
+          fi
+
+  # ===== DEPLOYMENT ENVIRONMENTS =====
+  deploy-development:
+    name: 🚀 Deploy to Development
+    runs-on: ubuntu-latest
+    needs: [integration-tests, performance-tests]
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: development
+      url: https://dev.skyscout.ai
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Deploy to EKS Development
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-dev-cluster
+          kubectl set image deployment/web-app web-app=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/skyscout-web:${{ github.sha }} -n development
+          kubectl rollout status deployment/web-app -n development
+
+  deploy-staging:
+    name: 🎭 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [integration-tests, performance-tests]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.skyscout.ai
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Deploy to EKS Staging
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-staging-cluster
+          kubectl set image deployment/web-app web-app=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/skyscout-web:${{ github.sha }} -n staging
+          kubectl rollout status deployment/web-app -n staging
+
+      - name: 🧪 Staging Smoke Tests
+        run: |
+          npm run test:smoke -- --baseUrl=https://staging.skyscout.ai
+
+  deploy-production:
+    name: 🏭 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://skyscout.ai
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Blue-Green Deployment
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name skyscout-prod-cluster
+
+          # Deploy to green environment
+          kubectl set image deployment/web-app-green web-app=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/skyscout-web:${{ github.sha }} -n production
+          kubectl rollout status deployment/web-app-green -n production
+
+          # Health checks
+          kubectl wait --for=condition=ready pod -l app=web-app-green -n production --timeout=300s
+
+          # Switch traffic to green
+          kubectl patch service web-app-service -n production -p '{"spec":{"selector":{"version":"green"}}}'
+
+          # Cleanup old blue deployment after successful switch
+          sleep 60
+          kubectl delete deployment web-app-blue -n production || true
+
+      - name: 🎯 Production Health Check
+        run: |
+          # Test all production URLs
+          URLS=(
+            "https://skyscout.ai"
+            "https://skyscout.ai/search" 
+            "https://skyscout.ai/deals"
+            "https://skyscout.ai/flights"
+            "https://skyscout.ai/hotels"
+          )
+
+          for url in "${URLS[@]}"; do
+            echo "Testing $url"
+            curl -f -s -o /dev/null "$url" || exit 1
+          done
+
+      - name: 📈 Post-Deploy Performance Audit
+        run: |
+          npx lighthouse-ci autorun --collect.url="https://skyscout.ai" --assert.assertions.performance=0.9
+
+  # ===== MONITORING & ALERTS =====
+  monitoring-setup:
+    name: 📊 Setup Monitoring
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 📊 Update CloudWatch Dashboards
+        run: |
+          aws cloudwatch put-dashboard --dashboard-name "SkyScout-Production" --dashboard-body file://infra/monitoring/cloudwatch-dashboard.json
+
+      - name: 🚨 Update Alerts
+        run: |
+          aws cloudwatch put-metric-alarm --alarm-name "SkyScout-HighErrorRate" --alarm-description "High error rate detected" --metric-name ErrorRate --namespace SkyScout/Production --statistic Average --period 300 --threshold 5 --comparison-operator GreaterThanThreshold
+
+  # ===== CLEANUP =====
+  cleanup:
+    name: 🧹 Cleanup
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: always()
+    steps:
+      - name: 🗑️ Clean up old ECR images
+        run: |
+          aws ecr list-images --repository-name skyscout-web --filter tagStatus=UNTAGGED --query 'imageIds[?imageDigest!=null]' --output json | jq '.[:10]' > images-to-delete.json
+          if [ -s images-to-delete.json ]; then
+            aws ecr batch-delete-image --repository-name skyscout-web --image-ids file://images-to-delete.json
+          fi

@@ -1,9 +1,3 @@
-/**
- * Hotel Trending Destinations Component
- * Shows popular destinations with accommodation deals
- * Designed to outperform Booking.com with better prices and options
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

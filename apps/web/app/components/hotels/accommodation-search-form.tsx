@@ -1,9 +1,3 @@
-/**
- * Accommodation Search Form Component
- * Advanced search for Hotels, Airbnb, VRBO with AI optimization
- * Designed to provide better search experience than Booking.com
- */
-
 'use client';
 
 import { Badge, Button, Card, cn } from '@skyscout/ui';

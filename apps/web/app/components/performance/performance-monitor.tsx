@@ -1,8 +1,3 @@
-/**
- * Performance Monitor Component
- * Real-time bundle size and performance tracking
- */
-
 'use client';
 
 import { Badge, Card, cn } from '@skyscout/ui';

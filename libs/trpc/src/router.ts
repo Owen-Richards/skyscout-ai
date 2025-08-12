@@ -1,6 +1,7 @@
-import { FlightSearchSchema } from '@skyscout/shared';
 import { z } from 'zod';
 import { publicProcedure, router } from './trpc';
+
+import { FlightSearchSchema } from '@skyscout/shared';
 
 export const appRouter = router({
   health: publicProcedure.query(() => {

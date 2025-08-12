@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { router, baseProcedure, protectedProcedure } from './trpc';
+import { TRPCError } from '@trpc/server';
+
 import { flightService } from '../services/flight.service';
 import { searchService } from '../services/search.service';
-import { TRPCError } from '@trpc/server';
 
 export const flightRouter = router({
   search: baseProcedure
