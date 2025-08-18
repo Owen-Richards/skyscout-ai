@@ -158,7 +158,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: 🏗️ Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.service.context }}
           file: ${{ matrix.service.dockerfile }}
