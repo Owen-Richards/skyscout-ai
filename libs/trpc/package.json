@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@trpc/server": "^10.45.0",
+    "@trpc/server": "^11.5.0",
     "@skyscout/shared": "*",
     "zod": "^3.22.4"
   },
