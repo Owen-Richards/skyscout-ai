@@ -73,7 +73,7 @@
     "deps:update": "npx npm-check-updates -u && npm install"
   },
   "devDependencies": {
-    "@nx/eslint-plugin": "^17.2.8",
+    "@nx/eslint-plugin": "^21.4.1",
     "@nx/js": "^17.2.8",
     "@nx/next": "^21.4.1",
     "@nx/node": "^17.2.8",
